@@ -1,0 +1,114 @@
+# Token Analytics Benchmark Queries
+# Real data from CoinGecko API (SOL, ETH, TAO - 30 days: 2025-06-09 to 2025-07-08)
+
+queries:
+  # Percentage threshold queries
+  - id: pct_tao_above_400
+    question: "What percentage of days was TAO above $400?"
+    category: "percentage_threshold"
+    truth: 9.68
+    explanation: "3 out of 31 days had TAO close above $400"
+    
+  - id: pct_sol_above_150
+    question: "What percentage of days was SOL above $150?"
+    category: "percentage_threshold"
+    truth: 45.16
+    explanation: "14 out of 31 days had SOL close above $150"
+    
+  - id: pct_eth_above_2500
+    question: "What percentage of days was ETH above $2500?"
+    category: "percentage_threshold"
+    truth: 64.52
+    explanation: "20 out of 31 days had ETH close above $2500"
+
+  # Price change queries
+  - id: sol_price_change_30d
+    question: "What was SOL's price change over the last 30 days?"
+    category: "price_change"
+    truth: -1.16
+    explanation: "SOL went from $152.50 to $150.74, a -1.16% change"
+    
+  - id: eth_price_change_30d
+    question: "What was ETH's price change over the last 30 days?"
+    category: "price_change"
+    truth: 2.31
+    explanation: "ETH went from $2508.78 to $2566.64, a +2.31% change"
+    
+  - id: tao_price_change_30d
+    question: "What was TAO's price change over the last 30 days?"
+    category: "price_change"
+    truth: -16.59
+    explanation: "TAO went from $382.35 to $318.92, a -16.59% change"
+
+  # Volume analysis queries
+  - id: highest_avg_volume
+    question: "Which token had the highest average daily volume?"
+    category: "volume_analysis"
+    truth: "ETH"
+    explanation: "ETH avg: $18.30B, SOL avg: $4.16B, TAO avg: $116.79M"
+    
+  - id: total_volume_ranking
+    question: "Rank SOL, ETH, TAO by total volume over the period."
+    category: "volume_analysis"
+    truth: ["ETH", "SOL", "TAO"]
+    explanation: "ETH: $567.23B, SOL: $129.06B, TAO: $3.62B"
+
+  # Price analysis queries
+  - id: eth_highest_close_date
+    question: "On which day did ETH have its highest close?"
+    category: "price_analysis"
+    truth: "2025-06-11"
+    explanation: "ETH closed at $2808.50 on June 11th"
+    
+  - id: sol_lowest_close_date
+    question: "On which day did SOL have its lowest close?"
+    category: "price_analysis"
+    truth: "2025-06-23"
+    explanation: "SOL closed at $131.81 on June 23rd"
+    
+  - id: rank_by_avg_close
+    question: "Rank SOL, ETH, TAO by average daily close price."
+    category: "price_analysis"
+    truth: ["ETH", "TAO", "SOL"]
+    explanation: "ETH: $2514.37, TAO: $348.60, SOL: $148.67"
+
+  # Volatility queries
+  - id: most_volatile_token
+    question: "Which token was most volatile (highest price range percentage)?"
+    category: "volatility"
+    truth: "TAO"
+    explanation: "TAO range: 33.9%, ETH range: 23.1%, SOL range: 25.1%"
+    
+  - id: sol_volatility_range
+    question: "What was SOL's price range (high-low) over the period?"
+    category: "volatility"
+    truth: 33.15
+    explanation: "SOL range: $164.96 - $131.81 = $33.15"
+
+  # Multi-token comparison queries
+  - id: best_performer_30d
+    question: "Which token performed best over the 30-day period?"
+    category: "performance_comparison"
+    truth: "ETH"
+    explanation: "ETH: +2.31%, SOL: -2.31%, TAO: -16.59%"
+    
+  - id: worst_performer_30d
+    question: "Which token performed worst over the 30-day period?"
+    category: "performance_comparison"
+    truth: "TAO"
+    explanation: "TAO: -16.59%, SOL: -2.31%, ETH: +2.31%"
+
+# Dataset metadata
+metadata:
+  tokens: ["SOL", "ETH", "TAO"]
+  date_range: "2025-06-09 to 2025-07-08"
+  total_days: 31
+  data_source: "CoinGecko API"
+  data_type: "Real market data (not synthetic)"
+  categories:
+    - percentage_threshold
+    - price_change
+    - volume_analysis
+    - price_analysis
+    - volatility
+    - performance_comparison 
