@@ -18,13 +18,13 @@ queries:
   truth: 40.0
   explanation: 12 out of 30 days had both SOL and ETH close higher than previous day
 - id: sol_price_change_first_half
-  question: What was SOL's price change during the first half (June 9 – June 23 2025)
+  question: What was SOL's price change during the first half (June 9 - June 23 2025)
     of the 30-day period?
   category: price_change
   truth: -13.57
   explanation: SOL went from $152.50 to $131.81, a -13.57% change
 - id: eth_price_change_second_half
-  question: What was ETH's price change during the second half (June 24 – July 8 2025)
+  question: What was ETH's price change during the second half (June 24 - July 8 2025)
     of the 30-day period?
   category: price_change
   truth: 5.89
@@ -79,7 +79,7 @@ queries:
   truth: '2025-06-09'
   explanation: TAO had largest intraday swing of 0.00% on 2025-06-09
 - id: eth_days_range_gt5pct
-  question: How many days did ETH's intraday range (high – low) exceed 5 % of its
+  question: How many days did ETH's intraday range (high - low) exceed 5 % of its
     closing price during the 30-day period?
   category: volatility
   truth: 0
@@ -91,7 +91,7 @@ queries:
   truth: 35.48
   explanation: 11 out of 31 days SOL closed above its 7-day moving average
 - id: rank_by_sharpe_30d
-  question: Rank SOL, ETH, TAO by 30-day Sharpe ratio (daily return ÷ daily standard-deviation)
+  question: Rank SOL, ETH, TAO by 30-day Sharpe ratio (daily return Ã· daily standard-deviation)
     for the period June 9 to July 8 2025.
   category: performance_comparison
   truth:
