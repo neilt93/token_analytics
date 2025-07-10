@@ -2,9 +2,11 @@ import yaml
 import pandas as pd
 import json
 import re
+import requests
 from datetime import datetime
 from typing import Dict, List, Any, Union
 import numpy as np
+import os
 
 class TokenAnalyticsEvaluator:
     """
@@ -12,21 +14,208 @@ class TokenAnalyticsEvaluator:
     Tests agents against real market data benchmarks
     """
     
-    def __init__(self, queries_file: str = 'data/queries.yaml'):
+    def __init__(self, queries_file: str = 'data/queries.yaml', llm_api_key: str = None):
         """
         Initialize evaluator with benchmark queries
         
         Args:
             queries_file: Path to YAML file containing queries and truth values
+            llm_api_key: API key for LLM parsing (optional)
         """
         self.queries_file = queries_file
         self.queries = self._load_queries()
         self.results = []
+        self.llm_api_key = llm_api_key or os.getenv('OPENAI_API_KEY')
         
     def _load_queries(self) -> Dict:
         """Load queries from YAML file"""
         with open(self.queries_file, 'r') as f:
             return yaml.safe_load(f)
+    
+    def _extract_with_llm(self, agent_response: str, question: str, category: str, expected_type: str) -> Any:
+        """
+        Use LLM to extract structured data from agent response
+        
+        Args:
+            agent_response: Raw response from agent
+            question: Original question asked
+            category: Question category
+            expected_type: Expected data type (number, percentage, date, token, ranking)
+            
+        Returns:
+            Extracted value in appropriate type
+        """
+        if not self.llm_api_key:
+            # Fallback to regex if no LLM API key
+            return self._extract_with_regex_fallback(agent_response, expected_type)
+        
+        try:
+            # Create parsing prompt
+            system_prompt = f"""You are a data extraction specialist. Extract the specific answer from the agent's response.
+
+Question: {question}
+Category: {category}
+Expected type: {expected_type}
+
+Extract ONLY the answer in the appropriate format:
+- For numbers: return just the number (e.g., 42.5)
+- For percentages: return just the number (e.g., 15.3 for 15.3%)
+- For dates: return YYYY-MM-DD format
+- For tokens: return the token symbol (SOL, ETH, TAO)
+- For rankings: return list of tokens in order (e.g., ["ETH", "SOL", "TAO"])
+- If no clear answer found, return null
+
+Respond with ONLY the extracted value, no explanation."""
+
+            headers = {
+                "Authorization": f"Bearer {self.llm_api_key}",
+                "Content-Type": "application/json"
+            }
+            
+            data = {
+                "model": "gpt-4o-mini",
+                "messages": [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": f"Agent response: {agent_response}"}
+                ],
+                "temperature": 0.1,
+                "max_tokens": 50
+            }
+            
+            response = requests.post(
+                "https://api.openai.com/v1/chat/completions",
+                headers=headers,
+                json=data,
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                extracted_text = response.json()["choices"][0]["message"]["content"].strip()
+                
+                # Parse based on expected type
+                if expected_type == "number" or expected_type == "percentage":
+                    try:
+                        return float(extracted_text)
+                    except ValueError:
+                        return None
+                elif expected_type == "date":
+                    # Validate date format
+                    if re.match(r'\d{4}-\d{2}-\d{2}', extracted_text):
+                        return extracted_text
+                    return None
+                elif expected_type == "token":
+                    if extracted_text.upper() in ['SOL', 'ETH', 'TAO']:
+                        return extracted_text.upper()
+                    return None
+                elif expected_type == "ranking":
+                    try:
+                        # Parse JSON list
+                        if extracted_text.startswith('[') and extracted_text.endswith(']'):
+                            tokens = json.loads(extracted_text)
+                            if all(t.upper() in ['SOL', 'ETH', 'TAO'] for t in tokens):
+                                return [t.upper() for t in tokens]
+                        return None
+                    except:
+                        return None
+                else:
+                    return extracted_text
+            else:
+                print(f"LLM API Error: {response.status_code}")
+                return self._extract_with_regex_fallback(agent_response, expected_type)
+                
+        except Exception as e:
+            print(f"LLM extraction error: {e}")
+            return self._extract_with_regex_fallback(agent_response, expected_type)
+    
+    def _extract_with_regex_fallback(self, text: str, expected_type: str) -> Any:
+        """
+        Fallback regex extraction when LLM is not available
+        """
+        if not text:
+            return None
+            
+        if expected_type == "percentage":
+            # Look for percentage pattern with % symbol
+            percentage_pattern = r'([+-]?([0-9]*[.])?[0-9]+)\s*%'
+            match = re.search(percentage_pattern, text)
+            if match:
+                try:
+                    return float(match.group(1))
+                except ValueError:
+                    pass
+            
+            # Look for percentage words
+            percentage_words_pattern = r'([+-]?([0-9]*[.])?[0-9]+)\s*(?:percent|percentage)'
+            match = re.search(percentage_words_pattern, text.lower())
+            if match:
+                try:
+                    return float(match.group(1))
+                except ValueError:
+                    pass
+                    
+        elif expected_type == "number":
+            # Remove dollar signs and common words
+            text = text.lower()
+            text = re.sub(r'\$', '', text)
+            text = re.sub(r'\b(about|approximately|roughly|around)\b', '', text)
+            
+            # For price changes, look for decrease/increase context
+            is_negative = False
+            if 'decrease' in text or 'decreased' in text or 'down' in text:
+                is_negative = True
+            elif 'increase' in text or 'increased' in text or 'up' in text:
+                is_negative = False
+            
+            # Find numbers (including decimals and negatives)
+            number_pattern = r'([+-]?([0-9]*[.])?[0-9]+)'
+            match = re.search(number_pattern, text)
+            if match:
+                try:
+                    value = float(match.group(1))
+                    if is_negative and value > 0:
+                        return -value
+                    return value
+                except ValueError:
+                    pass
+                    
+        elif expected_type == "date":
+            # Look for YYYY-MM-DD pattern
+            match = re.search(r'\d{4}-\d{2}-\d{2}', text)
+            if match:
+                return match.group(0)
+                
+        elif expected_type == "token":
+            text = text.upper()
+            tokens = ['SOL', 'ETH', 'TAO']
+            for token in tokens:
+                if token in text:
+                    return token
+                    
+        elif expected_type == "ranking":
+            text = text.upper()
+            tokens = ['SOL', 'ETH', 'TAO']
+            found_tokens = []
+            
+            # Remove common ranking words and symbols
+            text = re.sub(r'\b(ranked|ranking|order|by|as|follows?|is|are)\b', '', text)
+            text = re.sub(r'[->>\-\s]+', ' ', text)
+            text = re.sub(r'[,\s]+', ' ', text)
+            
+            # Split by spaces and find tokens in order
+            words = text.split()
+            for word in words:
+                if word in tokens and word not in found_tokens:
+                    found_tokens.append(word)
+            
+            # If we found tokens but not all 3, try a different approach
+            if found_tokens and len(found_tokens) < 3:
+                for token in tokens:
+                    if token in text and token not in found_tokens:
+                        found_tokens.append(token)
+            
+            return found_tokens if found_tokens else None
+        
+        return None
     
     def _extract_numeric_percentage(self, text: str) -> Union[float, None]:
         """
@@ -36,25 +225,8 @@ class TokenAnalyticsEvaluator:
         if not text:
             return None
             
-        # Look for percentage pattern with % symbol
-        percentage_pattern = r'([+-]?([0-9]*[.])?[0-9]+)\s*%'
-        match = re.search(percentage_pattern, text)
-        if match:
-            try:
-                return float(match.group(1))
-            except ValueError:
-                pass
-        
-        # Look for percentage words
-        percentage_words_pattern = r'([+-]?([0-9]*[.])?[0-9]+)\s*(?:percent|percentage)'
-        match = re.search(percentage_words_pattern, text.lower())
-        if match:
-            try:
-                return float(match.group(1))
-            except ValueError:
-                pass
-        
-        return None
+        # Use LLM for extraction
+        return self._extract_with_llm(text, "percentage_threshold", "percentage_threshold", "percentage")
     
     def _extract_plain_number(self, text: str) -> Union[float, None]:
         """
@@ -64,32 +236,8 @@ class TokenAnalyticsEvaluator:
         if not text:
             return None
             
-        # Remove dollar signs and common words
-        text = text.lower()
-        text = re.sub(r'\$', '', text)  # Remove $ signs
-        text = re.sub(r'\b(about|approximately|roughly|around)\b', '', text)  # Remove qualifiers
-        
-        # For price changes, look for decrease/increase context
-        is_negative = False
-        if 'decrease' in text or 'decreased' in text or 'down' in text:
-            is_negative = True
-        elif 'increase' in text or 'increased' in text or 'up' in text:
-            is_negative = False
-        
-        # Find numbers (including decimals and negatives)
-        number_pattern = r'([+-]?([0-9]*[.])?[0-9]+)'
-        match = re.search(number_pattern, text)
-        if match:
-            try:
-                value = float(match.group(1))
-                # If we detected a decrease but the number is positive, make it negative
-                if is_negative and value > 0:
-                    return -value
-                return value
-            except ValueError:
-                pass
-        
-        return None
+        # Use LLM for extraction
+        return self._extract_with_llm(text, "price_change", "price_change", "number")
     
     def _extract_number_from_text(self, text: str) -> Union[float, None]:
         """
@@ -104,14 +252,8 @@ class TokenAnalyticsEvaluator:
         if not text:
             return None
             
-        text = text.upper()
-        tokens = ['SOL', 'ETH', 'TAO']
-        
-        for token in tokens:
-            if token in text:
-                return token
-        
-        return None
+        # Use LLM for extraction
+        return self._extract_with_llm(text, "volatility", "volatility", "token")
     
     def _extract_token_name(self, text: str, token_list: List[str] = None) -> Union[str, None]:
         """
@@ -123,13 +265,8 @@ class TokenAnalyticsEvaluator:
         if token_list is None:
             token_list = ['SOL', 'ETH', 'TAO']
             
-        text = text.upper()
-        
-        for token in token_list:
-            if token in text:
-                return token
-        
-        return None
+        # Use LLM for extraction
+        return self._extract_with_llm(text, "volatility", "volatility", "token")
     
     def _extract_date_from_text(self, text: str) -> Union[str, None]:
         """
@@ -138,12 +275,8 @@ class TokenAnalyticsEvaluator:
         if not text:
             return None
             
-        # Look for YYYY-MM-DD pattern
-        match = re.search(r'\d{4}-\d{2}-\d{2}', text)
-        if match:
-            return match.group(0)
-        
-        return None
+        # Use LLM for extraction
+        return self._extract_with_llm(text, "price_analysis", "price_analysis", "date")
     
     def _normalize_ranking(self, text: str) -> Union[List[str], None]:
         """
@@ -153,29 +286,8 @@ class TokenAnalyticsEvaluator:
         if not text:
             return None
             
-        text = text.upper()
-        tokens = ['SOL', 'ETH', 'TAO']
-        found_tokens = []
-        
-        # Remove common ranking words and symbols
-        text = re.sub(r'\b(ranked|ranking|order|by|as|follows?|is|are)\b', '', text)
-        text = re.sub(r'[->>\-\s]+', ' ', text)  # Replace arrows and dashes with spaces
-        text = re.sub(r'[,\s]+', ' ', text)  # Normalize spaces and commas
-        
-        # Split by spaces and find tokens in order
-        words = text.split()
-        for word in words:
-            if word in tokens and word not in found_tokens:
-                found_tokens.append(word)
-        
-        # If we found tokens but not all 3, try a different approach
-        if found_tokens and len(found_tokens) < 3:
-            # Look for all tokens in the original text
-            for token in tokens:
-                if token in text and token not in found_tokens:
-                    found_tokens.append(token)
-        
-        return found_tokens if found_tokens else None
+        # Use LLM for extraction
+        return self._extract_with_llm(text, "performance_comparison", "performance_comparison", "ranking")
     
     def _extract_list_from_text(self, text: str) -> Union[List[str], None]:
         """
@@ -242,29 +354,45 @@ class TokenAnalyticsEvaluator:
         category = query['category']
         question = query['question'].lower()
         
-        # Use appropriate extractor based on question type
+        # Use LLM-based extraction for all categories
         if category == 'percentage_threshold':
-            predicted = self._extract_numeric_percentage(agent_response)
+            predicted = self._extract_with_llm(agent_response, query['question'], category, "percentage")
         elif category == 'price_change':
-            predicted = self._extract_plain_number(agent_response)
+            predicted = self._extract_with_llm(agent_response, query['question'], category, "number")
         elif category == 'volatility':
             # For volatility, check if it's asking for a token name or numeric range
             if 'most volatile' in question or 'which token' in question:
-                predicted = self._extract_token_name(agent_response)
+                predicted = self._extract_with_llm(agent_response, query['question'], category, "token")
             else:
-                predicted = self._extract_plain_number(agent_response)
+                predicted = self._extract_with_llm(agent_response, query['question'], category, "number")
+        elif category == 'volatility_stat':
+            # For volatility statistics, extract numbers
+            predicted = self._extract_with_llm(agent_response, query['question'], category, "number")
         elif category in ['volume_analysis', 'performance_comparison']:
             if 'ranking' in question or 'rank' in question:
-                predicted = self._normalize_ranking(agent_response)
+                predicted = self._extract_with_llm(agent_response, query['question'], category, "ranking")
             else:
-                predicted = self._extract_token_name(agent_response)
+                predicted = self._extract_with_llm(agent_response, query['question'], category, "token")
         elif category == 'price_analysis':
             if 'date' in question:
-                predicted = self._extract_date_from_text(agent_response)
+                predicted = self._extract_with_llm(agent_response, query['question'], category, "date")
             elif 'ranking' in question or 'rank' in question:
-                predicted = self._normalize_ranking(agent_response)
+                predicted = self._extract_with_llm(agent_response, query['question'], category, "ranking")
             else:
-                predicted = self._extract_token_name(agent_response)
+                predicted = self._extract_with_llm(agent_response, query['question'], category, "token")
+        elif category in ['conditional_threshold', 'streak_analysis', 'rolling_stats', 'conditional_volume']:
+            # For these categories, try to extract the most relevant type
+            if 'percentage' in question or '%' in question:
+                predicted = self._extract_with_llm(agent_response, query['question'], category, "percentage")
+            elif 'date' in question:
+                predicted = self._extract_with_llm(agent_response, query['question'], category, "date")
+            elif 'token' in question or any(token in question for token in ['SOL', 'ETH', 'TAO']):
+                predicted = self._extract_with_llm(agent_response, query['question'], category, "token")
+            else:
+                predicted = self._extract_with_llm(agent_response, query['question'], category, "number")
+        else:
+            # Default to number extraction
+            predicted = self._extract_with_llm(agent_response, query['question'], category, "number")
         
         # Calculate accuracy
         accuracy = self._calculate_accuracy(predicted, query['truth'], category)

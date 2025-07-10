@@ -18,13 +18,13 @@ queries:
   truth: 40.0
   explanation: 12 out of 30 days had both SOL and ETH close higher than previous day
 - id: sol_price_change_first_half
-  question: What was SOL's price change during the first half (June 9 – June 23 2025)
+  question: What was SOL's price change during the first half (June 9 June 23 2025)
     of the 30-day period?
   category: price_change
   truth: -13.57
   explanation: SOL went from $152.50 to $131.81, a -13.57% change
 - id: eth_price_change_second_half
-  question: What was ETH's price change during the second half (June 24 – July 8 2025)
+  question: What was ETH's price change during the second half (June 24 July 8 2025)
     of the 30-day period?
   category: price_change
   truth: 5.89
@@ -79,7 +79,7 @@ queries:
   truth: '2025-06-09'
   explanation: TAO had largest intraday swing of 0.00% on 2025-06-09
 - id: eth_days_range_gt5pct
-  question: How many days did ETH's intraday range (high – low) exceed 5 % of its
+  question: How many days did ETH's intraday range (high low) exceed 5 % of its
     closing price during the 30-day period?
   category: volatility
   truth: 0
@@ -91,7 +91,7 @@ queries:
   truth: 35.48
   explanation: 11 out of 31 days SOL closed above its 7-day moving average
 - id: rank_by_sharpe_30d
-  question: Rank SOL, ETH, TAO by 30-day Sharpe ratio (daily return ÷ daily standard-deviation)
+  question: Rank SOL, ETH, TAO by 30-day Sharpe ratio (daily return daily standard-deviation)
     for the period June 9 to July 8 2025.
   category: performance_comparison
   truth:
@@ -128,6 +128,68 @@ queries:
   category: volatility_stat
   truth: 3.3621
   explanation: ETH's daily returns had a standard deviation of 3.3621%
+- id: pct_days_sol_up_eth_down
+  question: What percentage of days did SOL close higher while ETH closed lower during
+    the 30-day period from June 9 to July 8 2025?
+  category: conditional_threshold
+  truth: 3.45
+  explanation: 1 out of 29 days had SOL up and ETH down
+- id: tao_avg_daily_range
+  question: What was TAO's average daily intraday range (high minus low) as a percentage
+    of its closing price during the 30-day period?
+  category: volatility_stat
+  truth: 0.00
+  explanation: Average daily high-low range as % of close (no intraday data available)
+- id: eth_biggest_single_day_loss
+  question: What was ETH's largest single-day percentage loss during the 30-day period?
+  category: volatility
+  truth: -5.62
+  explanation: ETH's worst daily return in that window
+- id: sol_days_close_eq_or_above_open
+  question: On how many days did SOL close at or above its daily opening price during
+    the 30-day period?
+  category: streak_analysis
+  truth: 14
+  explanation: Number of days SOL closed >= open
+- id: pct_days_tao_vol_gt_2x_avg
+  question: What percentage of days did TAO's daily volume exceed twice its 30-day
+    average volume?
+  category: volume_analysis
+  truth: 0.00
+  explanation: Days when TAO's volume > 2Ã— average
+- id: eth_largest_gap_open_close
+  question: What was ETH's largest positive or negative gap between previous close and
+    next open as a percentage of the previous close during the 30-day period?
+  category: volatility
+  truth: 0.00
+  explanation: Largest overnight gap up/down in % terms
+- id: sol_days_close_above_10dma
+  question: What percentage of days did SOL close above its 10-day moving average
+    during the 30-day period?
+  category: rolling_stats
+  truth: 37.93
+  explanation: Days SOL closed above its 10-DMA
+- id: rank_by_max_intraday_swing
+  question: Rank SOL, ETH, and TAO by their largest single-day high-low percentage
+    swing during the 30-day period.
+  category: performance_comparison
+  truth:
+  - SOL
+  - ETH
+  - TAO
+  explanation: Rank by maximum daily intraday range %
+- id: pct_days_all_up
+  question: What percentage of days did SOL, ETH, and TAO all close higher than the
+    previous day during the 30-day period?
+  category: conditional_threshold
+  truth: 34.48
+  explanation: Days when all three tokens closed green
+- id: tao_avg_return_on_high_vol_days
+  question: What was TAO's average daily return on the days when its daily volume
+    exceeded its 30-day average by at least 50%?
+  category: conditional_volume
+  truth: 0.00
+  explanation: Avg return for TAO on high-volume days
 metadata:
   tokens:
   - SOL
