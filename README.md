@@ -59,6 +59,8 @@ Then edit `.env` and add your actual API keys:
 PERPLEXITY_API_KEY=your_key_here
 OPENAI_API_KEY=your_key_here
 ANTHROPIC_API_KEY=your_key_here
+LANGFUSE_PUBLIC_KEY=your_langfuse_public_key
+LANGFUSE_SECRET_KEY=your_langfuse_secret_key
 ```
 
 ### 3. Test the System
@@ -89,6 +91,16 @@ python scripts/token_analytics_dataset.py
 
 ```bash
 python scripts/calculate_truth.py
+```
+
+### 8. Track Performance with Langfuse
+
+```bash
+# Run Langfuse integration
+python scripts/langfuse_integration.py
+
+# Or run the example
+python test/langfuse_example.py
 ```
 
 ## 🎯 What You Get
@@ -161,6 +173,16 @@ python test/run_perplexity_eval.py
 python test/real_llm_integration.py
 ```
 
+### Langfuse Performance Tracking
+
+```bash
+# Track evaluations in Langfuse
+python scripts/langfuse_integration.py
+
+# Run example with sample data
+python test/langfuse_example.py
+```
+
 ### Custom AI Service
 
 ```python
@@ -186,6 +208,7 @@ python test/real_llm_integration.py
 - Data generation tools from CoinGecko API
 - Data verification and validation scripts
 - Utility functions for data processing
+- Langfuse integration for performance tracking
 
 ### Core System
 
@@ -214,11 +237,19 @@ python test/real_llm_integration.py
 2. Implement the `extract()` method
 3. Register in the `ExtractorRegistry`
 
+### Langfuse Integration
+
+1. Set up Langfuse credentials in `.env`
+2. Run `python scripts/langfuse_integration.py` to track existing evaluations
+3. Use `LangfuseTokenAnalyticsTracker` in your custom scripts
+4. View traces in Langfuse dashboard for performance monitoring
+
 ## 📚 Documentation
 
 - **`README_EVALUATION.md`**: Detailed evaluation methodology
 - **`README_LLM_USAGE.md`**: LLM integration guide
 - **`IMPROVEMENTS_SUMMARY.md`**: Development roadmap and improvements
+- **`LANGFUSE_INTEGRATION.md`**: Complete Langfuse integration guide
 
 ## 🤝 Contributing
 
