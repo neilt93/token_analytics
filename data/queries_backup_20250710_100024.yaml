@@ -1,106 +1,4 @@
 queries:
-- id: easy_sol_current_price
-  question: What is SOL's current price?
-  category: basic_price
-  truth: 150.74
-  explanation: SOL current price is $150.74
-- id: easy_eth_current_price
-  question: What is ETH's current price?
-  category: basic_price
-  truth: 2566.64
-  explanation: ETH current price is $2566.64
-- id: easy_tao_current_price
-  question: What is TAO's current price?
-  category: basic_price
-  truth: 318.92
-  explanation: TAO current price is $318.92
-- id: easy_sol_total_return
-  question: What was SOL's total percentage return over the 30-day period?
-  category: basic_return
-  truth: -1.16
-  explanation: SOL total return was -1.16%
-- id: easy_eth_total_return
-  question: What was ETH's total percentage return over the 30-day period?
-  category: basic_return
-  truth: 2.31
-  explanation: ETH total return was 2.31%
-- id: easy_tao_total_return
-  question: What was TAO's total percentage return over the 30-day period?
-  category: basic_return
-  truth: -16.59
-  explanation: TAO total return was -16.59%
-- id: easy_sol_highest_price
-  question: What was SOL's highest price during the 30-day period?
-  category: basic_extremes
-  truth: 164.96
-  explanation: SOL highest price was $164.96
-- id: easy_sol_lowest_price
-  question: What was SOL's lowest price during the 30-day period?
-  category: basic_extremes
-  truth: 131.81
-  explanation: SOL lowest price was $131.81
-- id: easy_eth_highest_price
-  question: What was ETH's highest price during the 30-day period?
-  category: basic_extremes
-  truth: 2808.5
-  explanation: ETH highest price was $2808.50
-- id: easy_eth_lowest_price
-  question: What was ETH's lowest price during the 30-day period?
-  category: basic_extremes
-  truth: 2227.43
-  explanation: ETH lowest price was $2227.43
-- id: easy_tao_highest_price
-  question: What was TAO's highest price during the 30-day period?
-  category: basic_extremes
-  truth: 427.1
-  explanation: TAO highest price was $427.10
-- id: easy_tao_lowest_price
-  question: What was TAO's lowest price during the 30-day period?
-  category: basic_extremes
-  truth: 304.6
-  explanation: TAO lowest price was $304.60
-- id: easy_sol_green_days
-  question: How many days did SOL close higher than it opened during the 30-day period?
-  category: basic_counting
-  truth: 14
-  explanation: SOL had 14 green days out of 31
-- id: easy_eth_green_days
-  question: How many days did ETH close higher than it opened during the 30-day period?
-  category: basic_counting
-  truth: 16
-  explanation: ETH had 16 green days out of 31
-- id: easy_tao_green_days
-  question: How many days did TAO close higher than it opened during the 30-day period?
-  category: basic_counting
-  truth: 12
-  explanation: TAO had 12 green days out of 31
-- id: easy_rank_by_return
-  question: Rank SOL, ETH, and TAO by their total percentage return over the 30-day
-    period.
-  category: basic_ranking
-  truth:
-  - ETH
-  - SOL
-  - TAO
-  explanation: 'Returns: ETH 2.31%, SOL -1.16%, TAO -16.59%'
-- id: easy_rank_by_volume
-  question: Rank SOL, ETH, and TAO by their average daily trading volume over the
-    30-day period.
-  category: basic_ranking
-  truth:
-  - ETH
-  - SOL
-  - TAO
-  explanation: 'Average volumes: ETH $18,297,784,708, SOL $4,309,998,589, TAO $111,498,477'
-- id: easy_rank_by_volatility
-  question: Rank SOL, ETH, and TAO by their price volatility (highest to lowest price
-    range) over the 30-day period.
-  category: basic_ranking
-  truth:
-  - TAO
-  - ETH
-  - SOL
-  explanation: 'Price ranges: TAO 40.2%, ETH 26.1%, SOL 25.1%'
 - id: pct_tao_above_420_30d
   question: What percentage of days was TAO above $420 during the 30-day period from
     June 9 to July 8 2025?
@@ -181,8 +79,8 @@ queries:
   truth: '2025-06-09'
   explanation: TAO had largest intraday swing of 0.00% on 2025-06-09
 - id: eth_days_range_gt5pct
-  question: How many days did ETH's intraday range (high low) exceed 5 % of its closing
-    price during the 30-day period?
+  question: How many days did ETH's intraday range (high low) exceed 5 % of its
+    closing price during the 30-day period?
   category: volatility
   truth: 0
   explanation: ETH had 0 days where intraday range exceeded 5% of closing price
@@ -240,7 +138,7 @@ queries:
   question: What was TAO's average daily intraday range (high minus low) as a percentage
     of its closing price during the 30-day period?
   category: volatility_stat
-  truth: 0.0
+  truth: 0.00
   explanation: Average daily high-low range as % of close (no intraday data available)
 - id: eth_biggest_single_day_loss
   question: What was ETH's largest single-day percentage loss during the 30-day period?
@@ -257,13 +155,13 @@ queries:
   question: What percentage of days did TAO's daily volume exceed twice its 30-day
     average volume?
   category: volume_analysis
-  truth: 0.0
-  explanation: "Days when TAO's volume > 2\xC3\u2014 average"
+  truth: 0.00
+  explanation: Days when TAO's volume > 2× average
 - id: eth_largest_gap_open_close
-  question: What was ETH's largest positive or negative gap between previous close
-    and next open as a percentage of the previous close during the 30-day period?
+  question: What was ETH's largest positive or negative gap between previous close and
+    next open as a percentage of the previous close during the 30-day period?
   category: volatility
-  truth: 0.0
+  truth: 0.00
   explanation: Largest overnight gap up/down in % terms
 - id: sol_days_close_above_10dma
   question: What percentage of days did SOL close above its 10-day moving average
@@ -290,7 +188,7 @@ queries:
   question: What was TAO's average daily return on the days when its daily volume
     exceeded its 30-day average by at least 50%?
   category: conditional_volume
-  truth: 0.0
+  truth: 0.00
   explanation: Avg return for TAO on high-volume days
 metadata:
   tokens:
@@ -318,5 +216,3 @@ metadata:
   - Second half (June 24-July 8)
   - Calendar weeks
   - Rolling windows (3-day, 5-day, 7-day)
-  easy_questions_added: 18
-  total_questions: 48
