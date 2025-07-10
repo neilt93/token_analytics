@@ -13,6 +13,15 @@ from dotenv import load_dotenv
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from scripts.eval import TokenAnalyticsEvaluator
 
+# Langfuse integration
+from langfuse import Langfuse
+load_dotenv()
+langfuse = Langfuse(
+    public_key=os.getenv("LANGFUSE_PUBLIC_KEY"),
+    secret_key=os.getenv("LANGFUSE_SECRET_KEY"),
+    host=os.getenv("LANGFUSE_HOST", "https://us.cloud.langfuse.com")
+)
+
 # Load environment variables
 load_dotenv()
 
@@ -83,9 +92,20 @@ def run_chatgpt_evaluation(api_key):
         
         print(f"[{i:2d}/{len(queries)}] {query_id}: {question[:60]}...")
         
-        # Get response from ChatGPT
-        response = get_chatgpt_response(question, api_key)
-        responses[query_id] = response
+        # Langfuse tracing for each LLM call
+        with langfuse.start_as_current_span(
+            name="LLM Call",
+            metadata={
+                "query_id": query_id,
+                "question": question,
+                "llm_model": "gpt-4o"
+            }
+        ):
+            # Get response from ChatGPT
+            response = get_chatgpt_response(question, api_key)
+            responses[query_id] = response
+            # Log the response as a score (optional)
+            langfuse.score_current_trace(name="llm_response", value=1.0, comment=response)
         
         # Show response preview
         print(f"    Response: {response[:80]}...")
