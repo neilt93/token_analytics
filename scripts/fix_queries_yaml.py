@@ -1,38 +1,50 @@
 #!/usr/bin/env python3
 """
-Fix Queries YAML Formatting
-Convert numpy objects to regular Python types for clean YAML output
+Fix queries.yaml format by converting numpy values to regular Python numbers
 """
 
 import yaml
 import numpy as np
 
 def fix_queries_yaml():
-    """Fix the YAML formatting by converting numpy objects to regular types"""
+    """Fix the YAML format by converting numpy values to regular Python numbers"""
     
-    # Load current queries
+    # Load the current queries
     with open('data/queries.yaml', 'r') as f:
-        queries_data = yaml.safe_load(f)
+        data = yaml.safe_load(f)
     
-    # Fix numpy objects in truth values
-    for query in queries_data['queries']:
-        if 'truth' in query:
-            truth = query['truth']
-            
-            # Convert numpy scalars to regular Python types
-            if isinstance(truth, np.floating):
-                query['truth'] = float(truth)
-            elif isinstance(truth, np.integer):
-                query['truth'] = int(truth)
-            elif isinstance(truth, np.ndarray):
-                query['truth'] = truth.tolist()
+    # Convert numpy values to regular Python numbers
+    def convert_numpy_values(obj):
+        if isinstance(obj, dict):
+            return {k: convert_numpy_values(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [convert_numpy_values(item) for item in obj]
+        elif isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        else:
+            return obj
     
-    # Save fixed queries
+    # Convert all numpy values
+    fixed_data = convert_numpy_values(data)
+    
+    # Save the fixed version
     with open('data/queries.yaml', 'w') as f:
-        yaml.dump(queries_data, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+        yaml.dump(fixed_data, f, default_flow_style=False, sort_keys=False)
     
-    print("✅ Fixed YAML formatting issues!")
-    print("📄 Updated queries.yaml with clean data types")
+    print("✅ Fixed queries.yaml - converted numpy values to regular Python numbers")
+    
+    # Print summary
+    total_questions = len(fixed_data['queries'])
+    easy_questions = sum(1 for q in fixed_data['queries'] if q['id'].startswith('easy_'))
+    hard_questions = total_questions - easy_questions
+    
+    print(f"📊 Total questions: {total_questions}")
+    print(f"📈 Easy questions: {easy_questions}")
+    print(f"🎯 Hard questions: {hard_questions}")
 
 if __name__ == "__main__":
     fix_queries_yaml() 
