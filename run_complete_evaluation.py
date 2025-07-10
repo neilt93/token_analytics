@@ -115,8 +115,20 @@ def run_complete_evaluation(agent_responses: Dict[str, str],
     
     # Save results if output file specified
     if output_file:
+        # Convert GradeLevel enums to strings for JSON serialization
+        def convert_grade_levels(obj):
+            if isinstance(obj, dict):
+                return {k: convert_grade_levels(v) for k, v in obj.items()}
+            elif isinstance(obj, list):
+                return [convert_grade_levels(item) for item in obj]
+            elif hasattr(obj, 'value'):  # GradeLevel enum
+                return obj.value
+            else:
+                return obj
+        
+        serializable_report = convert_grade_levels(complete_report)
         with open(output_file, 'w') as f:
-            json.dump(complete_report, f, indent=2)
+            json.dump(serializable_report, f, indent=2)
         print(f"\n💾 Complete results saved to: {output_file}")
     
     # Print detailed analysis if verbose
@@ -216,8 +228,20 @@ def main():
         
         # Save comparison results
         if args.output:
+            # Convert GradeLevel enums to strings for JSON serialization
+            def convert_grade_levels(obj):
+                if isinstance(obj, dict):
+                    return {k: convert_grade_levels(v) for k, v in obj.items()}
+                elif isinstance(obj, list):
+                    return [convert_grade_levels(item) for item in obj]
+                elif hasattr(obj, 'value'):  # GradeLevel enum
+                    return obj.value
+                else:
+                    return obj
+            
+            serializable_results = convert_grade_levels(comparison_results)
             with open(args.output, 'w') as f:
-                json.dump(comparison_results, f, indent=2)
+                json.dump(serializable_results, f, indent=2)
             print(f"\n💾 Comparison results saved to: {args.output}")
         return
     

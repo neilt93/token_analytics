@@ -1,0 +1,1023 @@
+{
+  "evaluation_summary": {
+    "agent_name": "Perplexity AI (LLM Eval)",
+    "total_queries": 30,
+    "correct_answers": 1,
+    "accuracy_percentage": 3.3333333333333335,
+    "hallucination_count": 4,
+    "hallucination_rate": 13.333333333333334,
+    "average_absolute_error": 1083415608.3048832,
+    "results": [
+      {
+        "query_id": "pct_tao_above_420_30d",
+        "question": "What percentage of days was TAO above $420 during the 30-day period from June 9 to July 8 2025?",
+        "category": "percentage_threshold",
+        "truth": 3.23,
+        "explanation": "1 out of 31 days had TAO close above $420",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "Based on available data, during the 30-day period from June 9 to July 8, 2025:\n\n- **Early June 2025:** TAO was trading between $410 and $420, hovering just at or below the $420 mark[3].\n- **Throughout July 2025:** The forecasted average TAO price is $680.25, with a low of $363.90 and a peak of $996.59[1].\n\nFrom this, it can be inferred:\n\n- The first days of the period (early to mid-June) saw TAO mostly **at or just below $420**[3].\n- As July began, TAO's price appears to have increased significantly, moving well above $420 at least for several days[1].\n\nAssuming a transition from near $420 to well above $420 within the second half of June and into July, it is reasonable to estimate that TAO was **above $420 for roughly half to more than half of the 30-day period**, especially considering the sharp increase leading into July.\n\nTherefore, the **percentage of days TAO was above $420** during this period is likely around **50%\u201360%**. This is an estimate based on the available price ranges and forecast data[1][3]. Precise daily historical pricing would be needed for an exact figure, but with the data given, this is the most supported range.",
+        "predicted": 50.0,
+        "correct": false,
+        "absolute_error": 46.77,
+        "error_type": "numeric_error",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.871518"
+      },
+      {
+        "query_id": "pct_sol_below_140_30d",
+        "question": "What percentage of days was SOL below $140 during the 30-day period from June 9 to July 8 2025?",
+        "category": "percentage_threshold",
+        "truth": 9.68,
+        "explanation": "3 out of 31 days had SOL close below $140",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "To determine the **percentage of days SOL was below $140** from June 9 to July 8, 2025 (a 30-day period), we'll use available historical price data.\n\nFrom the search results:\n\n- The **lowest price for SOL in June 2025** was $131.93[1].\n- On June 21, 22, and 23, 2025, SOL's daily prices were:\n  - June 21: Not directly given, but likely close to this period\n  - June 22: $133.71\n  - June 23: $131.81[3]\n\nSince June's **monthly low was $131.93**, and Statista confirms SOL was under $140 on June 21\u201323, 2025[3], we can infer these are likely the only days in the period where SOL closed below $140. The rest of June's average and July's opening and low prices were all well above $140[1].\n\nTherefore:\n\n- **Number of days SOL was below $140:** 3 (June 21, 22, 23, 2025)\n- **Total days in the period:** 30\n\n\\[\n\\text{Percentage} = \\left(\\frac{3}{30}\\right) \\times 100 = 10\\%\n\\]\n\n**SOL was below $140 on 10% of the days during the 30-day period from June 9 to July 8, 2025**[1][3].",
+        "predicted": 10.0,
+        "correct": true,
+        "absolute_error": 0.3200000000000003,
+        "error_type": "numeric_error",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.871518"
+      },
+      {
+        "query_id": "pct_days_both_sol_eth_green_30d",
+        "question": "What percentage of days did **both** SOL and ETH close higher than the previous day during the 30-day period from June 9 to July 8 2025?",
+        "category": "conditional_threshold",
+        "truth": 40.0,
+        "explanation": "12 out of 30 days had both SOL and ETH close higher than previous day",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "Available search results do not provide daily closing price data for both **SOL** and **ETH** for each of the 30 days from June 9 to July 8, 2025, nor do they provide a summary of days when both closed higher than the previous day. The only specific daily movement data found is a small table of Wrapped SOL to ETH ratios for seven days between July 3 and July 9, 2025[1]. No full 30-day historical close data for both coins is included in the search results.\n\nGiven the lack of comprehensive daily close data for the full period in the search results, it is not possible to accurately calculate or state the **percentage of days during June 9\u2013July 8, 2025, when both SOL and ETH closed higher than the previous day** using only the provided context.\n\nIf you have access to the specific daily price data (for example, historical closing prices from a reputable price aggregator), I can assist you in calculating the exact percentage. Otherwise, based on these search results, the answer cannot be determined.",
+        "predicted": null,
+        "correct": false,
+        "absolute_error": null,
+        "error_type": "type_mismatch",
+        "is_hallucination": true,
+        "timestamp": "2025-07-09T22:27:23.871871"
+      },
+      {
+        "query_id": "sol_price_change_first_half",
+        "question": "What was SOL's price change during the first half (June 9 June 23 2025) of the 30-day period?",
+        "category": "price_change",
+        "truth": -13.57,
+        "explanation": "SOL went from $152.50 to $131.81, a -13.57% change",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "Between **June 9, 2025, and June 23, 2025**, Solana (SOL) experienced a notable price change:\n\n- **June 9, 2025:** The available historical data gives prices for June 10, but not precisely for June 9. On June 10, 2025, the closing price of SOL was **$165.14**[1].\n- **June 23, 2025:** No direct date for June 23 is listed, but June 17, 2025, is available, with SOL closing at **$148.05**[3].\n\nUsing these closest available prices:\n- **Price Change:** From June 10 ($165.14) to June 17 ($148.05), SOL **fell by $17.09**, which is a decrease of approximately **10.4%**.\n\nIf more precise June 23 data is available, the broader June 2025 trend can be referenced:\n- June 2025 opened at **$156.90** and closed at **$155.05**, a net loss of **1.19%** for the month[3].\n\nIn summary:\n- During the first half of the 30-day period (June 9\u2013June 23, 2025), **SOL's price decreased by about 10.4%** based on the closest available daily data, with the general trend in June being slightly negative[1][3].",
+        "predicted": -9.0,
+        "correct": false,
+        "absolute_error": 4.57,
+        "error_type": "numeric_error",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.871871"
+      },
+      {
+        "query_id": "eth_price_change_second_half",
+        "question": "What was ETH's price change during the second half (June 24 July 8 2025) of the 30-day period?",
+        "category": "price_change",
+        "truth": 5.89,
+        "explanation": "ETH went from $2423.90 to $2566.64, a 5.89% change",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "During the second half of the 30-day period\u2014specifically from **June 24 to July 8, 2025**\u2014the price of **Ethereum (ETH) increased**.\n\n- On **June 24, 2025**, ETH had just finished a strong two-day stretch, during which it rose 12.11%[1]. While the exact price on June 24 is not directly provided in the results, we know ETH had dropped below $2,700 after June 12 and only reclaimed it on July 9[4].\n- By **July 8, 2025**, ETH had recovered to **just under $2,700**. On July 9, it reached **$2,740.75**, which was noted as its **highest close since June 11**[1][4].\n\nComparing prices:\n- ETH spent nearly a month below $2,700 from June 12 until July 8[4].\n- As of July 8, ETH was just under $2,700; on July 9, it topped $2,740.75[1][4].\n\n**Price change calculation (approximate):**\n- **June 24, 2025:** ETH was below $2,700\u2014likely in the $2,400 to $2,600 range, based on forecasts and narrative context[3][4].\n- **July 8, 2025:** ETH was just under $2,700 (let's use $2,700 as the reference value)[4].\n\nIf we assume ETH was around **$2,440** on June 24 (based on price performance and the fact that it regained $2,700 on July 9 after being below for almost a month)[3][4], the change is:\n\n\\[\n\\text{Price Change} = \\frac{2,700 - 2,440}{2,440} \\times 100\\% \\approx 10.66\\%\n\\]\n\n**Conclusion:**  \n**Ethereum\u2019s price increased by approximately 10.7% during the period from June 24 to July 8, 2025, rising from roughly $2,440 to just under $2,700**[4][3]. This represented a solid recovery after ETH\u2019s June correction.",
+        "predicted": 30.0,
+        "correct": false,
+        "absolute_error": 24.11,
+        "error_type": "numeric_error",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.871871"
+      },
+      {
+        "query_id": "tao_biggest_weekly_gain",
+        "question": "Which **calendar week** inside the 30-day window saw TAO's largest 7-day percentage gain, and what was that gain?",
+        "category": "rolling_stats",
+        "truth": "Week of 2025-06-23 : +8.43 %",
+        "explanation": "TAO's largest 7-day gain was 8.43% starting 2025-06-23",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "The calendar week inside the past 30-day window that saw **TAO's largest 7-day percentage gain** was the week ending around April 28, 2025. During this period, **TAO gained 19.27%** over seven days, leading the rally among AI-related cryptocurrencies[1].",
+        "predicted": 19.27,
+        "correct": false,
+        "absolute_error": null,
+        "error_type": "type_mismatch",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.871871"
+      },
+      {
+        "query_id": "sol_longest_streak_above_155",
+        "question": "What was the longest consecutive streak of days SOL closed above $155 during the 30-day period?",
+        "category": "streak_analysis",
+        "truth": 3,
+        "explanation": "SOL closed above $155 for 3 consecutive days at its longest streak",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "Based on the available data, **Solana (SOL) closed above $155 for just one day during the recent 30-day period**. On July 4, 2025, SOL's price advanced by 3.81% to close at $155.57 after trading at $147.39 earlier, but there is no evidence it sustained this level for consecutive days. In fact, recent trading sessions have been dominated by bearish sentiment, with SOL subsequently falling back to around $138.5 and experiencing a five-day losing streak after failing to hold near the $160 level[2][3].\n\nTherefore, the longest streak of consecutive days SOL closed above $155 in the last 30 days was **1 day**[3].",
+        "predicted": 155.0,
+        "correct": false,
+        "absolute_error": 152.0,
+        "error_type": "numeric_error",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.871871"
+      },
+      {
+        "query_id": "eth_longest_consecutive_red_days",
+        "question": "How many consecutive days was ETH down (closed lower than previous day) in its longest losing streak during the 30-day period?",
+        "category": "streak_analysis",
+        "truth": 4,
+        "explanation": "ETH had 4 consecutive down days in its longest losing streak",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "Based on the available information, **the exact number of consecutive down days for ETH in its longest losing streak during the last 30 days is not provided directly in the search results**. However, several details from the period allow for informed estimation:\n\n- Ethereum (ETH) experienced significant **price weakness** and was \"rejected near $2,673,\" with a sharp downturn and a particularly notable **5.7% drop on June 16**[1].\n- Over the last 30 days (mid-June to early July 2025), ETH was **down 8% for the month as of June 26**, and the market mood was described as broadly bearish, with strong selling pressure and price sliding below key support levels[1][4].\n- Between June 11 and June 16, ETH was under heavy selling pressure, as noted by a dramatic daily decline and prevailing market weakness[1].\n- There was mention of a **four-day decline** of over 10% in a different context (from another recent bear phase)[2], but this refers to a December 2024 period, not the June\u2013July 2025 timeframe.\n\nGiven these facts:\n\n- The **longest consecutive losing streak** for ETH during this recent 30-day window likely occurred **around the sharp mid-June selloff**, potentially encompassing the days leading up to and including June 16.\n- There is no explicit statement in the results specifying a precise number, but **a streak of at least 4 consecutive down days is implied**, given the references to \u201cover 10% in the past four days\u201d declines in comparable bear runs[2], and the continuous selling pressure described in June 2025[1][4].\n\n**In summary:**  \nBased on available evidence, the **longest consecutive losing streak for ETH during the past 30 days was at least 4 days**, occurring amid the mid-June price rout. No direct source states a longer streak in this period, so 4 days is the best estimate supported by the data provided[1][4].",
+        "predicted": -30.0,
+        "correct": false,
+        "absolute_error": 34.0,
+        "error_type": "numeric_error",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.871871"
+      },
+      {
+        "query_id": "tao_max_5d_rolling_return",
+        "question": "What was the highest 5-day rolling return achieved by TAO during the 30-day period?",
+        "category": "rolling_stats",
+        "truth": 7.04,
+        "explanation": "TAO's highest 5-day rolling return was 7.04%",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "Based on available search results, specific daily price data for TAO over the last 30 days is not provided, so the calculation of the exact highest 5-day rolling return during that period cannot be reported directly. However, we can infer the potential range using the information on price volatility and recent price ranges.\n\n- The **30-day price volatility** for TAO is **8.49%**[3].\n- The **price in the last 24 hours** ranged from **$329.55 to $345.67**[3].\n- The **current price** is **$329.61**, with the all-time high in March 2024 at **$757.60**[3][5].\n\nWithout daily closing prices, an exact 5-day rolling return figure is not present in the provided data. However, historically, a volatility of 8.49% over 30 days typically suggests that the highest 5-day rolling return during this period would likely be under 10%. \n\nIf you require precise 5-day rolling return figures, you would need access to daily closing prices for TAO over the last 30 days.\n\nIf you have access to that data, you can compute the 5-day rolling return for each window as:\n\n\\[\n\\text{5-day return} = \\frac{\\text{Price}_{\\text{Day } N}}{\\text{Price}_{\\text{Day } N-5}} - 1\n\\]\n\nThen, take the maximum value from all computed 5-day windows.\n\nBased on the current context, the specific highest 5-day rolling return for TAO over the last 30 days cannot be determined from the search results provided[3][5].",
+        "predicted": 30.0,
+        "correct": false,
+        "absolute_error": 22.96,
+        "error_type": "numeric_error",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.871871"
+      },
+      {
+        "query_id": "sol_min_3d_rolling_return",
+        "question": "What was the lowest 3-day rolling return registered by SOL during the 30-day period?",
+        "category": "rolling_stats",
+        "truth": -9.1,
+        "explanation": "SOL's lowest 3-day rolling return was -9.10%",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "None of the search results provide explicit historical price data or specific 3-day rolling return figures for Solana (SOL) over the past 30 days. The sources predominantly focus on **price predictions, support/resistance levels, and broad trading ranges**, not on detailed return calculations or daily price series[1][3][5].\n\nBased on the available context:\n- The **lowest price forecasted for SOL in July 2025** is mentioned as **$130** as a potential low[3], while other sources cite support in the **$144\u2013$150 range** and short-term retracement targets as low as **$145\u2013$147**[1][5].\n- However, **returns data and specific rolling return calculations** are not provided in these sources.\n\nTo answer your query:\n- The **lowest 3-day rolling return registered by SOL during the last 30 days is not specified in the search results**. Calculating the lowest 3-day rolling return would require a series of daily closing prices, which are not included in the provided materials.\n\n**Inference**:  \nGiven that SOL's price ranged between approximately $145 and $165 in recent forecasts and short-term analysis, the largest 3-day negative return likely occurred during any short-term dip toward the $145\u2013$147 region[1], but the exact percentage or value cannot be determined from the sources provided.\n\nIf you need an accurate figure, you would need to consult a historical price chart for SOL, extract the daily closing prices for the last 30 days, and calculate the 3-day rolling returns for each period.",
+        "predicted": 3.0,
+        "correct": false,
+        "absolute_error": 12.1,
+        "error_type": "numeric_error",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.871871"
+      },
+      {
+        "query_id": "sol_highest_volume_zscore_day",
+        "question": "On which day did SOL record the highest positive volume z-score relative to its 30-day mean?",
+        "category": "volume_analysis",
+        "truth": "2025-06-14",
+        "explanation": "SOL had highest volume z-score of 2.16 on 2025-06-14",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "Based on the information available, **Solana (SOL) recorded its highest positive volume day relative to its 30-day average when its 24-hour trading volume surpassed $23 billion during its all-time high price event**. This volume spike occurred when SOL hit $268, which reflects an exceptionally high and likely statistically significant z-score compared to typical 30-day average volumes[1]. While the exact date is not explicitly stated in the results, the context places this record volume event around early February 2025, closely tied to the February 4, 2025 price milestone[1].\n\nThus, **the day SOL reached $268 with $23 billion in trading volume\u2014around February 4, 2025\u2014marks the day with the highest positive volume z-score relative to its 30-day mean**[1].",
+        "predicted": "SOL",
+        "correct": false,
+        "absolute_error": null,
+        "error_type": "string_mismatch",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.871871"
+      },
+      {
+        "query_id": "eth_avg_volume_when_sol_drop_gt5",
+        "question": "What was ETH's average daily volume on the days when SOL fell more than 5 % during the 30-day period?",
+        "category": "conditional_volume",
+        "truth": 19501480300.75,
+        "explanation": "ETH's average volume was $19501480300.75 on days when SOL fell more than 5%",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "The search results do not provide the precise daily trading volumes for Ethereum (ETH) specifically on the days when Solana (SOL) fell more than 5% over the last 30 days. However, some relevant data and context are available:\n\n- **ETH's overall 30-day average daily trading volume** (for the Grayscale Ethereum Trust ETF, ETHE) was **3.726 million shares** as of July 2, 2025[4]. This figure pertains to the ETF, not spot ETH, and may not represent total crypto exchange volume.\n- **ETH's monthly trading volume** in 2025 is reported as **$661.8 billion**, which averages to about **$22.06 billion per day** over a 30-day period[2]. This is the best available estimate for average daily trading volume in the absence of the specific, event-driven day data.\n- There is no search result specifying which days SOL fell more than 5% or reporting ETH\u2019s volumes on precisely those days.\n\nIf you want only ETH\u2019s average daily volume specifically on days when SOL experienced a drop of over 5% within the period, that information is not provided in the search results. Based on available data, **ETH\u2019s average daily trading volume during the last 30 days was approximately $22.06 billion**[2], but no breakdown is available for the subset of days matching your criteria.\n\nIf you have access to price and volume data for both ETH and SOL, you would need to:\n- Identify all days in the last 30 days that SOL dropped more than 5%.\n- Calculate the average ETH trading volume on just those days.\n\nIf you need that analysis and can provide the raw price/volume data, I can assist in calculating the specific answer.",
+        "predicted": 5.0,
+        "correct": false,
+        "absolute_error": 19501480295.75,
+        "error_type": "numeric_error",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.871871"
+      },
+      {
+        "query_id": "tao_highest_intraday_swing_date",
+        "question": "On which date did TAO experience its largest single-day high-low swing during the 30-day period?",
+        "category": "volatility",
+        "truth": "2025-06-09",
+        "explanation": "TAO had largest intraday swing of 0.00% on 2025-06-09",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "Based on the available search results, there is **no specific daily high and low data for each day in the last 30-day period** for TAO provided, which is necessary to determine precisely on which date TAO experienced its largest single-day high-low swing. The sources give overall volatility metrics and reference that TAO has shown **high 30-day volatility (13.28%)** and a **21% price decline in the last 30 days**, indicating there have been some significant daily swings recently[1][5].\n\nHowever, without a full listing of daily highs and lows, it is **not possible to identify the exact date** of the largest single-day high-low swing for TAO in the described period from the given data.\n\nIf you have access to a full daily price history (such as from a financial data terminal or an official exchange), you could identify the largest high-low swing by finding the day with the greatest absolute difference between high and low prices in the 30-day window. Otherwise, consider consulting a crypto data provider or charting platform (e.g., TradingView, CoinGecko) for this level of detail.",
+        "predicted": 30.0,
+        "correct": false,
+        "absolute_error": null,
+        "error_type": "type_mismatch",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.871871"
+      },
+      {
+        "query_id": "eth_days_range_gt5pct",
+        "question": "How many days did ETH's intraday range (high low) exceed 5 % of its closing price during the 30-day period?",
+        "category": "volatility",
+        "truth": 0,
+        "explanation": "ETH had 0 days where intraday range exceeded 5% of closing price",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "The search results do not provide direct, day-by-day Ethereum (ETH) intraday data for the past 30 days, nor a summary statistic counting the number of days on which **ETH's intraday range (high minus low) exceeded 5% of its closing price** over that period.\n\nHowever, here\u2019s how to approach this calculation with the relevant context:\n\n- **Definition**: The \u201cintraday range\u201d is the difference between the high and low price for the day. If this difference exceeds 5% of the closing price for that day, it counts for your statistic.\n- **Data Required**: You need the daily high, low, and closing price for ETH for each of the last 30 days.\n\nNone of the provided sources contains a tabulation or summary of this specific volatility statistic for ETH over a recent 30-day period[1][2][3][4]. \n\nIf you have access to ETH historical price data (e.g., from a provider like Barchart, CoinMarketCap, or a trading API), you would calculate for each day:\n\n\\[\n\\text{Intraday Range} = \\frac{\\text{High} - \\text{Low}}{\\text{Close}} \\times 100\\%\n\\]\n\nCount the number of days where this value exceeds 5%.\n\n**Inference based on volatility:**  \nEthereum's historical volatility has varied, but periods of high fluctuation (such as during major news or market downturns) may see several days with intraday ranges above 5%. During calmer periods, it's possible to go days or weeks without exceeding this threshold. Without concrete data for the last 30 days, an exact count cannot be given.\n\n**Summary**:  \n- The answer requires actual daily high, low, and close data for the period, which the search results do not provide.\n- Based on standard volatility patterns, such events are not rare during volatile periods but cannot be precisely counted without the raw data.\n\nIf you provide the raw OHLC (open, high, low, close) data for the past month, I can calculate the exact count for you.",
+        "predicted": -30.0,
+        "correct": false,
+        "absolute_error": 30.0,
+        "error_type": "numeric_error",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.871871"
+      },
+      {
+        "query_id": "pct_sol_close_above_7dma",
+        "question": "What percentage of total days did SOL close above its 7-day moving average during the 30-day period?",
+        "category": "rolling_stats",
+        "truth": 35.48,
+        "explanation": "11 out of 31 days SOL closed above its 7-day moving average",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "The **percentage of days that SOL closed above its 7-day moving average during a 30-day period** cannot be determined directly from the provided search results, as none of the sources supply the specific daily close vs. 7-day moving average data for the past 30 days[1][3][5]. \n\nTo calculate this percentage, you would need:\n- The **daily closing prices** for SOL over the last 30 days.\n- The **7-day moving average** for each of those days, calculated by averaging the closing price of SOL for each window of seven consecutive days[1][5].\n- A count of the days when the closing price was **greater than** the 7-day moving average.\n- Finally, divide that count by 30 and multiply by 100 to get the percentage.\n\nWithout access to the raw closing price data for each day of the last 30 days, a precise answer cannot be given based solely on the provided sources. If you can provide the daily closing prices, I can calculate the exact percentage for you.",
+        "predicted": null,
+        "correct": false,
+        "absolute_error": null,
+        "error_type": "type_mismatch",
+        "is_hallucination": true,
+        "timestamp": "2025-07-09T22:27:23.871871"
+      },
+      {
+        "query_id": "rank_by_sharpe_30d",
+        "question": "Rank SOL, ETH, TAO by 30-day Sharpe ratio (daily return daily standard-deviation) for the period June 9 to July 8 2025.",
+        "category": "performance_comparison",
+        "truth": [
+          "ETH",
+          "SOL",
+          "TAO"
+        ],
+        "explanation": "Sharpe ratios: ETH 0.612, SOL 0.107, TAO -1.602",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "Based on the available data for the period June 9 to July 8, 2025:\n\n- **Solana (SOL)**: Sharpe ratio is **0.07**\n- **Ethereum (ETH)**: Sharpe ratio is **-0.22**\n- **Bittensor (TAO)**: No direct 30-day Sharpe ratio is reported in the search results\n\nThe data from PortfoliosLab directly compares SOL and ETH, clearly indicating that **SOL's 30-day Sharpe ratio (0.07) is higher than ETH's (-0.22)** for this period[1]. Both values are based on daily return and daily standard deviation calculations.\n\nThere is no Sharpe ratio value or risk-adjusted performance metric provided for TAO in the retrieved sources for June 9\u2013July 8, 2025. The only available data for TAO is its daily price vs. ETH, not risk-adjusted return[3].\n\n**Ranking (Highest to Lowest 30-day Sharpe ratio):**\n1. **SOL** (0.07)[1]\n2. **ETH** (-0.22)[1]\n3. **TAO** (No data available\u2014cannot be ranked)\n\nIf you provide or have access to TAO's daily closing prices for the period, the Sharpe ratio could be calculated using the standard formula:\n\\[\n\\text{Sharpe Ratio} = \\frac{\\text{Average Daily Return} - \\text{Risk-Free Rate}}{\\text{Daily Standard Deviation of Returns}}\n\\]\nFor now, the ranking stands with SOL above ETH, and TAO unranked due to lack of data.",
+        "predicted": [
+          "SOL",
+          "ETH",
+          "TAO"
+        ],
+        "correct": false,
+        "absolute_error": null,
+        "error_type": "list_mismatch",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.871871"
+      },
+      {
+        "query_id": "rank_by_total_return_30d",
+        "question": "Rank SOL, ETH, TAO by total percentage return over the full 30-day window.",
+        "category": "performance_comparison",
+        "truth": [
+          "ETH",
+          "SOL",
+          "TAO"
+        ],
+        "explanation": "Total returns: ETH 2.31%, SOL -1.16%, TAO -16.59%",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "Based on the available data for the last 30 days leading up to July 9, 2025:\n\n**Solana (SOL):**\n- Closing price on June 9, 2025: $153.32\n- Closing price on July 9, 2025: $153.32 (most recent available, assumes no significant daily change cited)\n- **30-day return:** ~0% (price remained nearly flat based on available context)[1].\n\n**Ethereum (ETH):**\n- Closing price on June 9, 2025: $2,502.67\n- Closing price on July 9, 2025: $2,502.67 (most recent available, assumes no significant daily change cited)\n- **30-day return:** ~0% (price remained nearly flat based on available context)[1].\n\n**Bittensor (TAO):**\n- Price early June 2025: $410\u2013$420[3]\n- Price on July 9, 2025: Not precisely stated, but context from a TAO/ETH ratio increase of about 2.31% in the last 24 hours and a ratio increase from 0.1228 ETH (July 8) to 0.1256 ETH (July 9)[5].\n- If ETH remained essentially flat, TAO's dollar value would mirror this percentage: **approximately +2% over the last day and potentially a similar or slightly higher net gain during the 30-day period**.\n\n**Rank by 30-day percentage return:**\n\n| Rank | Asset  | Approx. 30-day Return |\n|------|--------|----------------------|\n| 1    | TAO    | +2% or slightly higher |\n| 2    | SOL    | ~0%                  |\n| 2    | ETH    | ~0%                  |\n\n**TAO had the highest total percentage return over the full 30-day window**, modestly outperforming both SOL and ETH, which were essentially flat during the period[1][5].",
+        "predicted": [
+          "ETH",
+          "TAO",
+          "SOL"
+        ],
+        "correct": false,
+        "absolute_error": null,
+        "error_type": "list_mismatch",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.872650"
+      },
+      {
+        "query_id": "rank_by_volatility_30d",
+        "question": "Rank SOL, ETH, TAO by highest 30-day price-range percentage (volatility) during the period.",
+        "category": "performance_comparison",
+        "truth": [
+          "TAO",
+          "ETH",
+          "SOL"
+        ],
+        "explanation": "Volatility ranges: ETH 23.11%, SOL 22.30%, TAO 35.14%",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "Based on recent data from the first half of 2025, the **30-day price-range percentage (volatility)** for each token can be assessed as follows:\n\n**Solana (SOL):**\n- In **February 2025**, SOL had a **monthly price range** from an opening of **$231.51** to a closing of **$137.61**. The percentage range is calculated as:\n  \\[\n  \\frac{231.51 - 137.61}{231.51} \\times 100\\% \\approx 40.6\\%\n  \\]\n  This was the largest monthly swing for SOL during the period[1].\n\n**Ethereum (ETH):**\n- In **February 2025**, ETH's price went from **$3,296.39** to **$2,305.32**. The percentage range is:\n  \\[\n  \\frac{3,296.39 - 2,305.32}{3,296.39} \\times 100\\% \\approx 30.1\\%\n  \\]\n  This was ETH's highest monthly price range in the recent data[1].\n\n**Bittensor (TAO):**\n- Over the most recent month, TAO's price has changed by **-13.06%** against USD, and in BTC and ETH pairs it saw even higher volatility[2]. However, there is no clear evidence in the results that TAO had a price swing larger than SOL or ETH over a recent 30-day period. The absolute 30-day move given is -13.06%[2].\n\n**Ranking by highest 30-day price-range percentage (volatility):**\n\n| Rank | Token | Highest 30-day Price-Range % (First Half 2025) |\n|------|-------|-----------------------------------------------|\n| 1    | **SOL** | **~40.6%**                                   |\n| 2    | **ETH** | **~30.1%**                                   |\n| 3    | **TAO** | **~13.1%**                                   |\n\n**Conclusion:**  \n**SOL** had the highest recent 30-day volatility, followed by **ETH**, with **TAO** exhibiting the lowest among the three in the period reviewed[1][2].",
+        "predicted": [
+          "SOL",
+          "ETH",
+          "TAO"
+        ],
+        "correct": false,
+        "absolute_error": null,
+        "error_type": "list_mismatch",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.872650"
+      },
+      {
+        "query_id": "pct_sol_above_160_when_eth_above_2700",
+        "question": "What percentage of days did SOL close above $160 **on days ETH closed above $2,700** during the 30-day period?",
+        "category": "conditional_threshold",
+        "truth": 100.0,
+        "explanation": "SOL closed above $160 on 2 out of 2 days when ETH was above $2700",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "Based on the data provided, **SOL rarely closed above $160 during the last 30-day period**. According to recent price analysis, the maximum level SOL reached in July 2025 was **$157.34**, and the average trading price was around **$162.70**[1]. However, the actual figures from the latest days show that SOL closed at **$152.77** on July 9, 2025, following a month-long increase of only 0.97%[1]. These values indicate that **SOL did not close above $160 on any day during this period**.\n\nWhen focusing on days **ETH closed above $2,700**, the available data does not show any instances where SOL closed above $160. Therefore, the **percentage of days SOL closed above $160 when ETH closed above $2,700 is 0%**[1].\n\nIf you need more granular historical daily close data, let me know\u2014based on current summaries, there were no such days in the last 30-day period.",
+        "predicted": 0.97,
+        "correct": false,
+        "absolute_error": 99.03,
+        "error_type": "numeric_error",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.872650"
+      },
+      {
+        "query_id": "eth_stddev_daily_return_30d",
+        "question": "What was the standard deviation of ETH's daily percentage returns during the 30-day period from June 9 to July 8 2025?",
+        "category": "volatility_stat",
+        "truth": 3.3621,
+        "explanation": "ETH's daily returns had a standard deviation of 3.3621%",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "The **standard deviation of ETH's daily percentage returns** during the 30-day period from June 9 to July 8, 2025, cannot be directly calculated from the provided search results because none of the sources supply the full daily closing price data for Ethereum during those dates, nor do they provide the daily percentage returns or their standard deviation explicitly.\n\nHowever, relevant data from the search results allows us to infer the approximate trading range for ETH during this period. According to recent coverage, ETH traded in a **range between approximately $2,350 and $2,750** over the past two months, indicating relatively low volatility and a period of price consolidation[3]. This suggests that the standard deviation of daily percentage returns was likely lower than during more volatile periods, but an exact value is not reported in the references[3].\n\nIf you have access to the daily closing prices for ETH from June 9 to July 8, 2025, you can calculate the standard deviation of daily percentage returns using the following approach (as suggested in academic and financial literature[4]):\n\n1. Calculate the daily percentage return for each day:\n   \\[\n   \\text{Daily Return}_t = \\frac{\\text{Close}_t - \\text{Close}_{t-1}}{\\text{Close}_{t-1}}\n   \\]\n2. Compute the standard deviation of these 30 daily returns.\n\nWithout the daily closing prices, a precise figure cannot be provided, but based on the consolidation range[3] and typical behavior in such periods, the standard deviation is expected to be **below the annualized historical average for Ethereum** (which, in volatile periods, can be above 5% daily but is likely lower in this consolidation phase)[4]. \n\nFor a precise answer, you will need the daily closing prices for the 30-day window and perform the calculation above.",
+        "predicted": 30.0,
+        "correct": false,
+        "absolute_error": 26.637900000000002,
+        "error_type": "numeric_error",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.872650"
+      },
+      {
+        "query_id": "pct_days_sol_up_eth_down",
+        "question": "What percentage of days did SOL close higher while ETH closed lower during the 30-day period from June 9 to July 8 2025?",
+        "category": "conditional_threshold",
+        "truth": 3.45,
+        "explanation": "1 out of 29 days had SOL up and ETH down",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "Based on the information available in the provided search results, there are **no daily close price data tables** for both *SOL* (Solana) and *ETH* (Ethereum) for the specific 30-day period from June 9 to July 8, 2025. The results reference some daily prices for SOL up to June 30, 2025[1], and general market commentary for early July[2][4], but do not provide the complete sequence of daily closes for both tokens necessary to perform a cross-day analysis.\n\nTo determine **the percentage of days SOL closed higher while ETH closed lower**, two daily datasets are required for the entire period\u2014something not present in the search results.\n\nBased on my expertise, this calculation would typically involve:\n\n- Reviewing 30 days of close data for both assets.\n- Counting the number of days when SOL\u2019s daily close was higher than its previous day, *and* ETH\u2019s close was lower than its previous day.\n- Dividing this count by 30 and multiplying by 100 to get the percentage.\n\nHowever, **without the precise daily close values for both assets across the full period, the requested percentage cannot be accurately determined from the given data**.\n\nIf you provide the daily close data for SOL and ETH for the period June 9\u2013July 8, 2025, I can compute the percentage as described. Alternatively, you may want to consult comprehensive crypto price databases or charting services to retrieve the necessary data for this analysis.",
+        "predicted": null,
+        "correct": false,
+        "absolute_error": null,
+        "error_type": "type_mismatch",
+        "is_hallucination": true,
+        "timestamp": "2025-07-09T22:27:23.872650"
+      },
+      {
+        "query_id": "tao_avg_daily_range",
+        "question": "What was TAO's average daily intraday range (high minus low) as a percentage of its closing price during the 30-day period?",
+        "category": "volatility_stat",
+        "truth": 0.0,
+        "explanation": "Average daily high-low range as % of close (no intraday data available)",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "The **average daily intraday range** for TAO as a **percentage of its closing price** over the last 30 days cannot be determined exactly from the available search results, as none provide the specific high, low, and close data for each day during that period[1]. However, here's how this metric is typically calculated and what is known from the context:\n\n- The **intraday range** for each day is calculated as:  \n  \\[\n  \\text{Range}_\\text{day} = \\text{High}_\\text{day} - \\text{Low}_\\text{day}\n  \\]\n\n- To express this as a **percentage of the closing price**:\n  \\[\n  \\text{Range Percentage}_\\text{day} = \\frac{\\text{High}_\\text{day} - \\text{Low}_\\text{day}}{\\text{Close}_\\text{day}} \\times 100\\%\n  \\]\n\n- The **average over 30 days** would be:\n  \\[\n  \\text{Average Range \\% (30d)} = \\frac{1}{30} \\sum_{i=1}^{30} \\left( \\frac{\\text{High}_i - \\text{Low}_i}{\\text{Close}_i} \\times 100\\% \\right)\n  \\]\n\nBased on the search results:\n- We know TAO has been volatile, with a 16.94% decline over the last month[1], but no daily range data is given.\n- No site cited provides the 30-day ATR, nor a series of daily highs and lows, so the value cannot be computed from these sources.\n\n**Conclusion:**  \nThere is insufficient data in the search results to provide the exact average daily intraday range as a percentage of TAO's closing price for the last 30 days. If you have access to the daily OHLC (Open, High, Low, Close) data for TAO over this period, you can use the above formula to compute the result; otherwise, this statistic is not directly available from currently listed sources[1][2].",
+        "predicted": 30.0,
+        "correct": false,
+        "absolute_error": 30.0,
+        "error_type": "numeric_error",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.872650"
+      },
+      {
+        "query_id": "eth_biggest_single_day_loss",
+        "question": "What was ETH's largest single-day percentage loss during the 30-day period?",
+        "category": "volatility",
+        "truth": -5.62,
+        "explanation": "ETH's worst daily return in that window",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "**Ethereum\u2019s largest single-day percentage loss during the 30-day period was 10.29%** on March 3, 2025[4]. This drop was the largest daily loss since March and reflected broader market volatility. On another noted occasion, Ethereum also experienced a sharp single-day drop of **10.07%** to $2,933.47 on February 2, 2025, but the 10.29% loss on March 3 was the largest within the relevant 30-day window[2][4].",
+        "predicted": 30.0,
+        "correct": false,
+        "absolute_error": 35.62,
+        "error_type": "numeric_error",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.872650"
+      },
+      {
+        "query_id": "sol_days_close_eq_or_above_open",
+        "question": "On how many days did SOL close at or above its daily opening price during the 30-day period?",
+        "category": "streak_analysis",
+        "truth": 14,
+        "explanation": "Number of days SOL closed >= open",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "Based on the available search results, there is no direct, day-by-day breakdown of **how many days Solana (SOL) closed at or above its daily opening price during the last 30 days**. The results give general price trends, recent percentage changes, and some technical outlooks but do not provide specific daily open and close data needed to answer this question precisely[1][2][4].\n\nTherefore, without access to a detailed daily OHLC (Open, High, Low, Close) dataset for SOL for the past 30 days, it is not possible to state the exact number of days SOL closed at or above its opening price using just the provided sources.\n\nIf you have access to a resource such as TradingView, CoinMarketCap, or a similar financial data provider, you could quickly calculate this by:\n\n1. Downloading or viewing SOL's last 30 daily candles.\n2. Counting the days where the closing price was **greater than or equal to** the opening price.\n\nIf you can provide such data or request it from a specific platform, I can guide you step-by-step through the analysis or help automate the calculation. But with the information given, the answer cannot be determined precisely from the cited material.",
+        "predicted": -30.0,
+        "correct": false,
+        "absolute_error": 44.0,
+        "error_type": "numeric_error",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.872650"
+      },
+      {
+        "query_id": "pct_days_tao_vol_gt_2x_avg",
+        "question": "What percentage of days did TAO's daily volume exceed twice its 30-day average volume?",
+        "category": "volume_analysis",
+        "truth": 0.0,
+        "explanation": "Days when TAO's volume > 2\u00c3\u2014 average",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "There is insufficient data in the search results to precisely calculate the percentage of days when **TAO's daily volume exceeded twice its 30-day average volume**. The available sources provide recent daily volumes\u2014such as **$87.6 million** and **$151.9 million**\u2014and mention how to calculate a moving average, but do not supply a daily volume history for the past 30 days or the computed 30-day average[1][3][4][5]. Therefore, based on these search results, an exact answer to your query cannot be provided.\n\nIf you have access to historical volume data for TAO, you would calculate the 30-day average volume, then count the number of days with volume exceeding twice that average, and divide by 30 to determine the percentage[4]. \n\nIf you can provide the last 30 days of TAO volume data, I can perform the calculation. Without that, the percentage cannot be determined from the current results.",
+        "predicted": "TAO",
+        "correct": false,
+        "absolute_error": null,
+        "error_type": "type_mismatch",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.872650"
+      },
+      {
+        "query_id": "eth_largest_gap_open_close",
+        "question": "What was ETH's largest positive or negative gap between previous close and next open as a percentage of the previous close during the 30-day period?",
+        "category": "volatility",
+        "truth": 0.0,
+        "explanation": "Largest overnight gap up/down in % terms",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "The search results do not provide the specific **largest positive or negative gap** (as a percentage) between Ethereum's previous close and next open during the last 30 days. None of the sources include a detailed table, chart, or mention of gap statistics for ETH for that period[1][2][3][5].\n\nBased on standard practices, such a gap is calculated as:\n\n\\[\n\\text{Gap \\%} = \\frac{\\text{Next Open} - \\text{Previous Close}}{\\text{Previous Close}} \\times 100\n\\]\n\nYou would need access to detailed daily open and close price data for ETH to compute this precisely. No such data is present in the provided search results, and so the exact figure cannot be given here.\n\nIf you require the exact percentage, you would need to reference a historical price data source (such as a cryptocurrency exchange or financial data provider) for each day in the last 30 days, calculate the percentage change between each previous close and the following open, and identify the maximum positive and negative values.\n\nIf additional data or specific dates are provided, I can help compute the percentage. Otherwise, the answer is that **the precise largest gap (positive or negative) is not available in the search results**[1][3][5].",
+        "predicted": 30.0,
+        "correct": false,
+        "absolute_error": 30.0,
+        "error_type": "numeric_error",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.872650"
+      },
+      {
+        "query_id": "sol_days_close_above_10dma",
+        "question": "What percentage of days did SOL close above its 10-day moving average during the 30-day period?",
+        "category": "rolling_stats",
+        "truth": 37.93,
+        "explanation": "Days SOL closed above its 10-DMA",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "Based on available data, the **exact percentage of days Solana (SOL) closed above its 10-day moving average during the most recent 30-day period is not directly provided in the search results**. None of the sources explicitly state this ratio or provide a precomputed statistic for this period[2][3][5].\n\nHowever, here is what is available:\n- One source indicates that, over the entire tracked history, SOL closed above its opening price on **49.55% of days**[2]. This statistic is related but not identical to closing above the 10-day moving average.\n- The technical overview available from TradingView shows a *neutral* summary for moving averages as of July 9, 2025, but doesn't break down the percentage of closes above the 10-day moving average for the last 30 days[5].\n- No source provides a day-by-day signal history or table for the last 30 days tracking the 10-day moving average cross[4][5].\n\n**Conclusion:**  \nThere is no direct statistic in the provided materials answering what percentage of days SOL closed above its 10-day moving average in the last 30 days. Based on the broader historical context (roughly half of days closing above the open), it might be close to 50%, but this is only an estimate and not a confirmed figure from the search results[2]. For precise calculation, you would need the historical daily closing prices and 10-day moving averages for SOL for the past month and compare them day by day.",
+        "predicted": 49.55,
+        "correct": false,
+        "absolute_error": 11.619999999999997,
+        "error_type": "numeric_error",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.872650"
+      },
+      {
+        "query_id": "rank_by_max_intraday_swing",
+        "question": "Rank SOL, ETH, and TAO by their largest single-day high-low percentage swing during the 30-day period.",
+        "category": "performance_comparison",
+        "truth": [
+          "SOL",
+          "ETH",
+          "TAO"
+        ],
+        "explanation": "Rank by maximum daily intraday range %",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "Based on the available data, here is a ranking of **SOL (Solana)**, **ETH (Ethereum)**, and **TAO (Bittensor)** by their largest single-day high-low percentage swing during the last 30 days:\n\n1. **SOL (Solana)**:\n   - On June 30, 2025, SOL experienced a significant intraday swing due to ETF news: it rallied to $161 and adjusted to $157 later in the same day. This represents a high-low percentage swing of:\n   \\[\n   \\frac{161 - 157}{157} \\times 100 \\approx 2.55\\%\n   \\]\n   However, the article notes a 7% surge for the day, suggesting the actual swing compared to the previous close was even higher. But for intraday swing, the explicit high and low are $161 and $157[4].\n\n2. **ETH (Ethereum)**:\n   - There is no explicit day-by-day high-low price swing provided in the search results for the last 30 days. Based on recent price data, Ethereum\u2019s swings have mirrored SOL, but with less volatility mentioned in the context[4]. Without concrete intraday swing figures for Ethereum, it appears to be less than Solana\u2019s 2.55%+ noted above.\n\n3. **TAO (Bittensor)**:\n   - No daily high-low data or notable percentage swings from the past 30 days are present in the search results[5]. Price predictions and general performance are provided, but not high-low swing specifics.\n\n**Ranking, from highest to lowest single-day high-low swing:**\n\n| Rank | Asset | Largest Documented Single-Day High-Low % Swing (30d) |\n|------|-------|-----------------------------------------------------|\n| 1    | **SOL** | **~2.55%** (June 30, 2025)                         |\n| 2    | **ETH** | *No explicit swing documented, likely less than SOL*|\n| 3    | **TAO** | *No data available for recent 30-day window*       |\n\n**Conclusion:**  \nSOL had the largest documented single-day high-low percentage swing (~2.55%) during the last 30 days. There is no concrete high-low swing data for TAO, and ETH appears to have had smaller or insufficiently documented swings in this period[4][5].",
+        "predicted": [
+          "SOL",
+          "TAO",
+          "ETH"
+        ],
+        "correct": false,
+        "absolute_error": null,
+        "error_type": "list_mismatch",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.872650"
+      },
+      {
+        "query_id": "pct_days_all_up",
+        "question": "What percentage of days did SOL, ETH, and TAO all close higher than the previous day during the 30-day period?",
+        "category": "conditional_threshold",
+        "truth": 34.48,
+        "explanation": "Days when all three tokens closed green",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "There is not enough information in the provided search results to determine the **exact percentage of days** during the past 30-day period that **SOL, ETH, and TAO all closed higher than the previous day**. The search results discuss price movements and trends for SOL and ETH\u2014including strong rallies, outperformances, and key levels\u2014but do not offer daily close data or mention Bittensor (TAO) price movements in relation to the other two assets over 30 days[2][3][4][5]. \n\nTo accurately answer your question, it is necessary to analyze the daily closing price data for SOL, ETH, and TAO over the relevant 30-day period, count the days when all three assets closed higher than the day prior, and then calculate the percentage of such days out of the total 30. The search results do not include this daily historical data. \n\nIf you can provide the daily price data for all three coins over the last 30 days, I can calculate the requested percentage.",
+        "predicted": null,
+        "correct": false,
+        "absolute_error": null,
+        "error_type": "type_mismatch",
+        "is_hallucination": true,
+        "timestamp": "2025-07-09T22:27:23.872650"
+      },
+      {
+        "query_id": "tao_avg_return_on_high_vol_days",
+        "question": "What was TAO's average daily return on the days when its daily volume exceeded its 30-day average by at least 50%?",
+        "category": "conditional_volume",
+        "truth": 0.0,
+        "explanation": "Avg return for TAO on high-volume days",
+        "agent_name": "Perplexity AI (LLM Eval)",
+        "agent_response": "Based on the provided search results, there is no direct information available regarding **TAO's average daily return specifically on days when its daily volume exceeded its 30-day average by at least 50%**. The search results include data on TAO Synergies' total returns, average price changes, moving averages, and some historical price information for Bittensor (TAO), but do not detail volume-relative return breakdowns or correlate returns to volume spikes[1][3][5].\n\nIf you require this analysis:\n- You would need **daily closing prices** and **daily trading volume** for TAO.\n- Calculate the **30-day average volume** for each trading day.\n- Identify days where the volume was at least 50% greater than the 30-day average.\n- Calculate and average the daily returns for those specific days.\n\nIf you have access to detailed historical price and volume data, you could conduct this analysis programmatically with a tool like Python or Excel. \n\nIf you need further guidance or a sample code snippet for calculating this metric, let me know.",
+        "predicted": 50.0,
+        "correct": false,
+        "absolute_error": 50.0,
+        "error_type": "numeric_error",
+        "is_hallucination": false,
+        "timestamp": "2025-07-09T22:27:23.872650"
+      }
+    ],
+    "timestamp": "2025-07-09T22:27:23.872650"
+  },
+  "grading_report": {
+    "overall_score": 46.67,
+    "overall_grade": "D",
+    "total_questions": 30,
+    "category_performance": {
+      "percentage_threshold": {
+        "average_score": 73.0,
+        "grade": "B-",
+        "count": 2
+      },
+      "conditional_threshold": {
+        "average_score": 11.5,
+        "grade": "F",
+        "count": 4
+      },
+      "price_change": {
+        "average_score": 52.0,
+        "grade": "D+",
+        "count": 2
+      },
+      "rolling_stats": {
+        "average_score": 40.4,
+        "grade": "D-",
+        "count": 5
+      },
+      "streak_analysis": {
+        "average_score": 46.0,
+        "grade": "D",
+        "count": 3
+      },
+      "volume_analysis": {
+        "average_score": 55.0,
+        "grade": "C-",
+        "count": 2
+      },
+      "conditional_volume": {
+        "average_score": 49.0,
+        "grade": "D",
+        "count": 2
+      },
+      "volatility": {
+        "average_score": 50.5,
+        "grade": "D+",
+        "count": 4
+      },
+      "performance_comparison": {
+        "average_score": 64.0,
+        "grade": "C",
+        "count": 4
+      },
+      "volatility_stat": {
+        "average_score": 49.0,
+        "grade": "D",
+        "count": 2
+      }
+    },
+    "grade_distribution": {
+      "A+": 1,
+      "A": 0,
+      "A-": 0,
+      "B+": 0,
+      "B": 0,
+      "B-": 0,
+      "C+": 0,
+      "C": 4,
+      "C-": 3,
+      "D+": 7,
+      "D": 11,
+      "D-": 0,
+      "F": 4
+    },
+    "detailed_results": [
+      {
+        "query_id": "pct_tao_above_420_30d",
+        "category": "percentage_threshold",
+        "grade": "D",
+        "score": 46.0,
+        "accuracy_score": 10.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccf Error magnitude: 46.77",
+          "\ud83d\udd22 Numeric precision issue"
+        ]
+      },
+      {
+        "query_id": "pct_sol_below_140_30d",
+        "category": "percentage_threshold",
+        "grade": "A+",
+        "score": 100.0,
+        "accuracy_score": 100.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\u2705 Correct answer",
+          "\ud83d\udccf Error magnitude: 0.32",
+          "\ud83d\udd22 Numeric precision issue"
+        ]
+      },
+      {
+        "query_id": "pct_days_both_sol_eth_green_30d",
+        "category": "conditional_threshold",
+        "grade": "F",
+        "score": 0.0,
+        "accuracy_score": 0.0,
+        "precision_score": 0.0,
+        "quality_score": 0.0,
+        "penalties": [
+          "Hallucination detected"
+        ],
+        "bonuses": [],
+        "feedback": []
+      },
+      {
+        "query_id": "sol_price_change_first_half",
+        "category": "price_change",
+        "grade": "C-",
+        "score": 58.0,
+        "accuracy_score": 30.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccf Error magnitude: 4.57",
+          "\ud83d\udd22 Numeric precision issue"
+        ]
+      },
+      {
+        "query_id": "eth_price_change_second_half",
+        "category": "price_change",
+        "grade": "D",
+        "score": 46.0,
+        "accuracy_score": 10.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccf Error magnitude: 24.11",
+          "\ud83d\udd22 Numeric precision issue"
+        ]
+      },
+      {
+        "query_id": "tao_biggest_weekly_gain",
+        "category": "rolling_stats",
+        "grade": "D+",
+        "score": 52.0,
+        "accuracy_score": 20.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udd04 Type conversion issue"
+        ]
+      },
+      {
+        "query_id": "sol_longest_streak_above_155",
+        "category": "streak_analysis",
+        "grade": "D",
+        "score": 46.0,
+        "accuracy_score": 10.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccf Error magnitude: 152.00",
+          "\ud83d\udd22 Numeric precision issue"
+        ]
+      },
+      {
+        "query_id": "eth_longest_consecutive_red_days",
+        "category": "streak_analysis",
+        "grade": "D",
+        "score": 46.0,
+        "accuracy_score": 10.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccf Error magnitude: 34.00",
+          "\ud83d\udd22 Numeric precision issue"
+        ]
+      },
+      {
+        "query_id": "tao_max_5d_rolling_return",
+        "category": "rolling_stats",
+        "grade": "D",
+        "score": 46.0,
+        "accuracy_score": 10.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccf Error magnitude: 22.96",
+          "\ud83d\udd22 Numeric precision issue"
+        ]
+      },
+      {
+        "query_id": "sol_min_3d_rolling_return",
+        "category": "rolling_stats",
+        "grade": "D",
+        "score": 46.0,
+        "accuracy_score": 10.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccf Error magnitude: 12.10",
+          "\ud83d\udd22 Numeric precision issue"
+        ]
+      },
+      {
+        "query_id": "sol_highest_volume_zscore_day",
+        "category": "volume_analysis",
+        "grade": "C-",
+        "score": 58.0,
+        "accuracy_score": 30.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udcdd String matching issue"
+        ]
+      },
+      {
+        "query_id": "eth_avg_volume_when_sol_drop_gt5",
+        "category": "conditional_volume",
+        "grade": "D",
+        "score": 46.0,
+        "accuracy_score": 10.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccf Error magnitude: 19501480295.75",
+          "\ud83d\udd22 Numeric precision issue"
+        ]
+      },
+      {
+        "query_id": "tao_highest_intraday_swing_date",
+        "category": "volatility",
+        "grade": "D+",
+        "score": 52.0,
+        "accuracy_score": 20.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udd04 Type conversion issue"
+        ]
+      },
+      {
+        "query_id": "eth_days_range_gt5pct",
+        "category": "volatility",
+        "grade": "D+",
+        "score": 52.0,
+        "accuracy_score": 20.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccf Error magnitude: 30.00",
+          "\ud83d\udd22 Numeric precision issue"
+        ]
+      },
+      {
+        "query_id": "pct_sol_close_above_7dma",
+        "category": "rolling_stats",
+        "grade": "F",
+        "score": 0.0,
+        "accuracy_score": 0.0,
+        "precision_score": 0.0,
+        "quality_score": 0.0,
+        "penalties": [
+          "Hallucination detected"
+        ],
+        "bonuses": [],
+        "feedback": []
+      },
+      {
+        "query_id": "rank_by_sharpe_30d",
+        "category": "performance_comparison",
+        "grade": "C",
+        "score": 64.0,
+        "accuracy_score": 40.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccb List ordering issue"
+        ]
+      },
+      {
+        "query_id": "rank_by_total_return_30d",
+        "category": "performance_comparison",
+        "grade": "C",
+        "score": 64.0,
+        "accuracy_score": 40.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccb List ordering issue"
+        ]
+      },
+      {
+        "query_id": "rank_by_volatility_30d",
+        "category": "performance_comparison",
+        "grade": "C",
+        "score": 64.0,
+        "accuracy_score": 40.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccb List ordering issue"
+        ]
+      },
+      {
+        "query_id": "pct_sol_above_160_when_eth_above_2700",
+        "category": "conditional_threshold",
+        "grade": "D",
+        "score": 46.0,
+        "accuracy_score": 10.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccf Error magnitude: 99.03",
+          "\ud83d\udd22 Numeric precision issue"
+        ]
+      },
+      {
+        "query_id": "eth_stddev_daily_return_30d",
+        "category": "volatility_stat",
+        "grade": "D",
+        "score": 46.0,
+        "accuracy_score": 10.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccf Error magnitude: 26.64",
+          "\ud83d\udd22 Numeric precision issue"
+        ]
+      },
+      {
+        "query_id": "pct_days_sol_up_eth_down",
+        "category": "conditional_threshold",
+        "grade": "F",
+        "score": 0.0,
+        "accuracy_score": 0.0,
+        "precision_score": 0.0,
+        "quality_score": 0.0,
+        "penalties": [
+          "Hallucination detected"
+        ],
+        "bonuses": [],
+        "feedback": []
+      },
+      {
+        "query_id": "tao_avg_daily_range",
+        "category": "volatility_stat",
+        "grade": "D+",
+        "score": 52.0,
+        "accuracy_score": 20.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccf Error magnitude: 30.00",
+          "\ud83d\udd22 Numeric precision issue"
+        ]
+      },
+      {
+        "query_id": "eth_biggest_single_day_loss",
+        "category": "volatility",
+        "grade": "D",
+        "score": 46.0,
+        "accuracy_score": 10.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccf Error magnitude: 35.62",
+          "\ud83d\udd22 Numeric precision issue"
+        ]
+      },
+      {
+        "query_id": "sol_days_close_eq_or_above_open",
+        "category": "streak_analysis",
+        "grade": "D",
+        "score": 46.0,
+        "accuracy_score": 10.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccf Error magnitude: 44.00",
+          "\ud83d\udd22 Numeric precision issue"
+        ]
+      },
+      {
+        "query_id": "pct_days_tao_vol_gt_2x_avg",
+        "category": "volume_analysis",
+        "grade": "D+",
+        "score": 52.0,
+        "accuracy_score": 20.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udd04 Type conversion issue"
+        ]
+      },
+      {
+        "query_id": "eth_largest_gap_open_close",
+        "category": "volatility",
+        "grade": "D+",
+        "score": 52.0,
+        "accuracy_score": 20.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccf Error magnitude: 30.00",
+          "\ud83d\udd22 Numeric precision issue"
+        ]
+      },
+      {
+        "query_id": "sol_days_close_above_10dma",
+        "category": "rolling_stats",
+        "grade": "C-",
+        "score": 58.0,
+        "accuracy_score": 30.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccf Error magnitude: 11.62",
+          "\ud83d\udd22 Numeric precision issue"
+        ]
+      },
+      {
+        "query_id": "rank_by_max_intraday_swing",
+        "category": "performance_comparison",
+        "grade": "C",
+        "score": 64.0,
+        "accuracy_score": 40.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccb List ordering issue"
+        ]
+      },
+      {
+        "query_id": "pct_days_all_up",
+        "category": "conditional_threshold",
+        "grade": "F",
+        "score": 0.0,
+        "accuracy_score": 0.0,
+        "precision_score": 0.0,
+        "quality_score": 0.0,
+        "penalties": [
+          "Hallucination detected"
+        ],
+        "bonuses": [],
+        "feedback": []
+      },
+      {
+        "query_id": "tao_avg_return_on_high_vol_days",
+        "category": "conditional_volume",
+        "grade": "D+",
+        "score": 52.0,
+        "accuracy_score": 20.0,
+        "precision_score": 100.0,
+        "quality_score": 100.0,
+        "penalties": [],
+        "bonuses": [],
+        "feedback": [
+          "\ud83d\udccf Error magnitude: 50.00",
+          "\ud83d\udd22 Numeric precision issue"
+        ]
+      }
+    ],
+    "summary_stats": {
+      "average_accuracy_score": 20.0,
+      "average_precision_score": 86.66666666666667,
+      "average_quality_score": 86.66666666666667,
+      "questions_with_penalties": 4,
+      "questions_with_bonuses": 0
+    }
+  },
+  "metadata": {
+    "agent_name": "Perplexity AI (LLM Eval)",
+    "evaluation_timestamp": "2025-07-09T22:27:23.874639",
+    "total_queries": 30,
+    "overall_grade": "D",
+    "overall_score": 46.67
+  }
+}
