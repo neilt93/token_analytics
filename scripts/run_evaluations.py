@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from eval import TokenAnalyticsEvaluator
+from scripts.eval import TokenAnalyticsEvaluator
 
 # Load environment variables
 load_dotenv()

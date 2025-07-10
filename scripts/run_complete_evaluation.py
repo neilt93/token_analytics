@@ -12,8 +12,8 @@ from datetime import datetime
 from typing import Dict, List, Any
 
 # Import our components
-from eval import TokenAnalyticsEvaluator
-from grading_scale import AnalyticsGradingScale
+from scripts.eval import TokenAnalyticsEvaluator
+from scripts.grading_scale import AnalyticsGradingScale
 
 def load_agent_responses(file_path: str) -> Dict[str, str]:
     """Load agent responses from JSON file"""
