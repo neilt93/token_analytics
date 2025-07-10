@@ -1,0 +1,9 @@
+agents:
+  - name: "crypto-agent"
+    id: "dhnphu1glde1"
+
+  # - name: "claude-crypto"
+  #   id: "s1s7ic7kjqnt"
+
+tags:
+  - "assistant"
