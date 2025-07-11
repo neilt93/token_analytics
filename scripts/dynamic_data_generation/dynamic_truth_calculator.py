@@ -168,6 +168,24 @@ class DynamicTruthCalculator:
             
             return (sol_up_eth_down / total_days) * 100 if total_days > 0 else 0.0
         
+        elif condition == 'sol_above_160_when_eth_above_2700':
+            sol_df = self.data.get('SOL')
+            eth_df = self.data.get('ETH')
+            
+            if sol_df is None or eth_df is None:
+                return 0.0
+            
+            # Days when ETH is above 2700
+            eth_above_2700 = eth_df['close'] > 2700
+            
+            if eth_above_2700.sum() == 0:
+                return 0.0  # No days with ETH above 2700
+            
+            # On those days, how many times was SOL above 160?
+            sol_above_160_on_eth_days = (sol_df['close'] > 160) & eth_above_2700
+            
+            return (sol_above_160_on_eth_days.sum() / eth_above_2700.sum()) * 100
+        
         return 0.0
     
     def calculate_price_change(self, token: str, period: str) -> float:
@@ -212,6 +230,17 @@ class DynamicTruthCalculator:
             max_gain = weekly_returns.max()
             
             return f"Week of {max_week_idx.strftime('%Y-%m-%d')} : +{max_gain:.2f} %"
+        
+        elif metric == 'pct_close_above_7dma':
+            # Calculate 7-day moving average
+            df['7dma'] = df['close'].rolling(window=7).mean()
+            
+            # Count days where close is above 7dma (excluding first 6 days)
+            valid_days = df.dropna()
+            days_above_7dma = (valid_days['close'] > valid_days['7dma']).sum()
+            total_valid_days = len(valid_days)
+            
+            return (days_above_7dma / total_valid_days) * 100 if total_valid_days > 0 else 0.0
         
         return None
     
@@ -261,6 +290,17 @@ class DynamicTruthCalculator:
         elif metric == 'avg_daily_change':
             return float(df['daily_return'].mean())
         
+        elif metric == 'highest_intraday_swing_date':
+            # Calculate intraday swing as (high - low) / close * 100
+            df['intraday_swing'] = (df['high'] - df['low']) / df['close'] * 100
+            max_swing_idx = df['intraday_swing'].idxmax()
+            return max_swing_idx.strftime('%Y-%m-%d')
+        
+        elif metric == 'days_range_gt5pct':
+            # Calculate intraday range as percentage of closing price
+            df['intraday_range'] = (df['high'] - df['low']) / df['close'] * 100
+            return int((df['intraday_range'] > 5).sum())
+        
         return None
     
     def calculate_volume_analysis(self, token: str, metric: str) -> Union[float, str]:
@@ -282,6 +322,29 @@ class DynamicTruthCalculator:
             avg_volume = df['volume'].mean()
             days_high_vol = (df['volume'] > 2 * avg_volume).sum()
             return (days_high_vol / len(df)) * 100
+        
+        return None
+    
+    def calculate_conditional_volume(self, condition: str) -> Union[float, None]:
+        """Calculate conditional volume metrics"""
+        if condition == 'eth_avg_volume_when_sol_drop_gt5':
+            sol_df = self.data.get('SOL')
+            eth_df = self.data.get('ETH')
+            
+            if sol_df is None or eth_df is None:
+                return None
+            
+            # Find days when SOL dropped more than 5%
+            sol_drops_gt5 = sol_df['daily_return'] < -5
+            drop_dates = sol_df[sol_drops_gt5].index
+            
+            if len(drop_dates) == 0:
+                return None  # No days with SOL drops > 5%
+            
+            # Get ETH volume on those specific dates
+            eth_volume_on_drop_days = eth_df.loc[drop_dates, 'volume']
+            
+            return float(eth_volume_on_drop_days.mean())
         
         return None
     
@@ -333,6 +396,8 @@ class DynamicTruthCalculator:
                 return self.calculate_conditional_threshold('both_sol_eth_green')
             elif 'sol_up_eth_down' in query_id:
                 return self.calculate_conditional_threshold('sol_up_eth_down')
+            elif 'pct_sol_above_160_when_eth_above_2700' in query_id:
+                return self.calculate_conditional_threshold('sol_above_160_when_eth_above_2700')
         
         elif category == 'price_change':
             if 'sol_price_change_first_half' in query_id:
@@ -347,6 +412,8 @@ class DynamicTruthCalculator:
                 return self.calculate_rolling_stats('SOL', 'min_3d_rolling_return')
             elif 'tao_biggest_weekly_gain' in query_id:
                 return self.calculate_rolling_stats('TAO', 'biggest_weekly_gain')
+            elif 'pct_sol_close_above_7dma' in query_id:
+                return self.calculate_rolling_stats('SOL', 'pct_close_above_7dma')
         
         elif category == 'streak_analysis':
             if 'sol_longest_streak_above_155' in query_id:
@@ -357,8 +424,12 @@ class DynamicTruthCalculator:
         elif category == 'volatility':
             if 'tao_highest_daily_change_date' in query_id:
                 return self.calculate_volatility_stats('TAO', 'highest_daily_change_date')
+            elif 'tao_highest_intraday_swing_date' in query_id:
+                return self.calculate_volatility_stats('TAO', 'highest_intraday_swing_date')
             elif 'eth_days_change_gt5pct' in query_id:
                 return self.calculate_volatility_stats('ETH', 'days_change_gt5pct')
+            elif 'eth_days_range_gt5pct' in query_id:
+                return self.calculate_volatility_stats('ETH', 'days_range_gt5pct')
             elif 'eth_biggest_single_day_loss' in query_id:
                 return self.calculate_volatility_stats('ETH', 'biggest_single_day_loss')
         
@@ -374,6 +445,10 @@ class DynamicTruthCalculator:
             elif 'pct_days_tao_vol_gt_2x_avg' in query_id:
                 return self.calculate_volume_analysis('TAO', 'pct_days_vol_gt_2x_avg')
         
+        elif category == 'conditional_volume':
+            if 'eth_avg_volume_when_sol_drop_gt5' in query_id:
+                return self.calculate_conditional_volume('eth_avg_volume_when_sol_drop_gt5')
+        
         elif category == 'performance_comparison':
             if 'rank_by_max_daily_change' in query_id:
                 return self.calculate_ranking('max_daily_change')
@@ -388,6 +463,10 @@ class DynamicTruthCalculator:
                 
                 sorted_tokens = sorted(sharpe_ratios.items(), key=lambda x: x[1], reverse=True)
                 return [token for token, _ in sorted_tokens]
+            elif 'rank_by_total_return' in query_id:
+                return self.calculate_ranking('return')
+            elif 'rank_by_volatility' in query_id:
+                return self.calculate_ranking('volatility')
         
         # Default: return None if we can't calculate
         return None

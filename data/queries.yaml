@@ -1,142 +1,4 @@
-queries:
-- id: pct_tao_above_420_30d
-  question: What percentage of days was TAO above $420 during the 30-day period from
-    June 9 to July 8 2025?
-  category: percentage_threshold
-  truth: 0.0
-  explanation: 0 out of 26 days had TAO close above $420
-- id: pct_sol_below_140_30d
-  question: What percentage of days was SOL below $140 during the 30-day period from
-    June 9 to July 8 2025?
-  category: percentage_threshold
-  truth: 11.54
-  explanation: 3 out of 26 days had SOL close below $140
-- id: pct_days_both_sol_eth_green_30d
-  question: What percentage of days did **both** SOL and ETH close higher than the
-    previous day during the 30-day period from June 9 to July 8 2025?
-  category: conditional_threshold
-  truth: 40.0
-  explanation: 10 out of 25 days had both SOL and ETH close higher than previous day
-- id: sol_price_change_first_half
-  question: What was SOL's price change during the first half (June 9 – June 23 2025)
-    of the 30-day period?
-  category: price_change
-  truth: -13.66
-  explanation: SOL went from $152.66 to $131.81, a -13.66% change
-- id: eth_price_change_second_half
-  question: What was ETH's price change during the second half (June 24 – July 8 2025)
-    of the 30-day period?
-  category: price_change
-  truth: 4.94
-  explanation: ETH went from $2423.90 to $2543.63, a 4.94% change
-- id: tao_biggest_weekly_gain
-  question: Which **calendar week** inside the 30-day window saw TAO's largest 7-day
-    percentage gain, and what was that gain?
-  category: rolling_stats
-  truth: 'Week of 2025-06-23 : +8.43 %'
-  explanation: TAO's largest 7-day gain was 8.43% starting 2025-06-23
-- id: sol_longest_streak_above_155
-  question: What was the longest consecutive streak of days SOL closed above $155
-    during the 30-day period?
-  category: streak_analysis
-  truth: 0
-  explanation: SOL closed above $155 for 0 consecutive days at its longest streak
-- id: eth_longest_consecutive_red_days
-  question: How many consecutive days was ETH down (closed lower than previous day)
-    in its longest losing streak during the 30-day period?
-  category: streak_analysis
-  truth: 3
-  explanation: ETH had 3 consecutive down days in its longest losing streak
-- id: tao_max_5d_rolling_return
-  question: What was the highest 5-day rolling return achieved by TAO during the 30-day
-    period?
-  category: rolling_stats
-  truth: 7.04
-  explanation: TAO's highest 5-day rolling return was 7.04%
-- id: sol_min_3d_rolling_return
-  question: What was the lowest 3-day rolling return registered by SOL during the
-    30-day period?
-  category: rolling_stats
-  truth: -9.1
-  explanation: SOL's lowest 3-day rolling return was -9.10%
-- id: sol_highest_volume_zscore_day
-  question: On which day did SOL record the highest positive volume z-score relative
-    to its 30-day mean?
-  category: volume_analysis
-  truth: '2025-06-14'
-  explanation: SOL had highest volume z-score of 2.21 on 2025-06-14
-- id: eth_avg_volume_when_sol_drop_gt5
-  question: What was ETH's average daily volume on the days when SOL fell more than
-    5 % during the 30-day period?
-  category: conditional_volume
-  truth: 12933967031.52
-  explanation: ETH's average volume was $12933967031.52 on days when SOL fell more
-    than 5%
-- id: tao_highest_intraday_swing_date
-  question: On which date did TAO experience its largest single-day high-low swing
-    during the 30-day period?
-  category: volatility
-  truth: '2025-06-16'
-  explanation: TAO had largest intraday swing of 5.34% on 2025-06-16
-- id: eth_days_range_gt5pct
-  question: How many days did ETH's intraday range (high – low) exceed 5 % of its
-    closing price during the 30-day period?
-  category: volatility
-  truth: 7
-  explanation: ETH had 7 days where intraday range exceeded 5% of closing price
-- id: pct_sol_close_above_7dma
-  question: What percentage of total days did SOL close above its 7-day moving average
-    during the 30-day period?
-  category: rolling_stats
-  truth: 38.46
-  explanation: 10 out of 26 days SOL closed above its 7-day moving average
-- id: rank_by_sharpe_30d
-  question: Rank SOL, ETH, TAO by 30-day Sharpe ratio (daily return ÷ daily standard-deviation)
-    for the period June 9 to July 8 2025.
-  category: performance_comparison
-  truth:
-  - SOL
-  - ETH
-  - TAO
-  explanation: 'Sharpe ratios: ETH -0.619, SOL -0.180, TAO -2.189'
-- id: rank_by_total_return_30d
-  question: Rank SOL, ETH, TAO by total percentage return over the full 30-day window.
-  category: performance_comparison
-  truth:
-  - SOL
-  - ETH
-  - TAO
-  explanation: 'Total returns: ETH -4.13%, SOL -2.54%, TAO -17.36%'
-- id: rank_by_volatility_30d
-  question: Rank SOL, ETH, TAO by highest 30-day price-range percentage (volatility)
-    during the period.
-  category: performance_comparison
-  truth:
-  - TAO
-  - ETH
-  - SOL
-  explanation: 'Volatility ranges: ETH 20.86%, SOL 19.54%, TAO 29.15%'
-- id: pct_sol_above_160_when_eth_above_2700
-  question: What percentage of days did SOL close above $160 **on days ETH closed
-    above $2,700** during the 30-day period?
-  category: conditional_threshold
-  truth: 0.0
-  explanation: SOL closed above $160 on 0 out of 0 days when ETH was above $2700
-- id: eth_stddev_daily_return_30d
-  question: What was the standard deviation of ETH's daily percentage returns during
-    the 30-day period from June 9 to July 8 2025?
-  category: volatility_stat
-  truth: 3.1337
-  explanation: ETH's daily returns had a standard deviation of 3.1337%
 metadata:
-  tokens:
-  - SOL
-  - ETH
-  - TAO
-  date_range: 2025-06-09 to 2025-07-08
-  total_days: 31
-  data_source: CoinGecko API
-  data_type: Real market data (not synthetic)
   categories:
   - percentage_threshold
   - conditional_threshold
@@ -148,9 +10,147 @@ metadata:
   - volatility
   - volatility_stat
   - performance_comparison
+  data_source: CoinGecko API
+  data_type: Real market data (not synthetic)
+  date_range: 2025-06-09 to 2025-07-08
   time_horizons:
   - 30-day period (full dataset)
   - First half (June 9-23)
   - Second half (June 24-July 8)
   - Calendar weeks
   - Rolling windows (3-day, 5-day, 7-day)
+  tokens:
+  - SOL
+  - ETH
+  - TAO
+  total_days: 31
+queries:
+- category: percentage_threshold
+  explanation: 0 out of 26 days had TAO close above $420
+  id: pct_tao_above_420_30d
+  question: What percentage of days was TAO above $420 during the 30-day period from
+    June 9 to July 8 2025?
+  truth: 0.0
+- category: percentage_threshold
+  explanation: 3 out of 26 days had SOL close below $140
+  id: pct_sol_below_140_30d
+  question: What percentage of days was SOL below $140 during the 30-day period from
+    June 9 to July 8 2025?
+  truth: 10.0
+- category: conditional_threshold
+  explanation: 10 out of 25 days had both SOL and ETH close higher than previous day
+  id: pct_days_both_sol_eth_green_30d
+  question: What percentage of days did **both** SOL and ETH close higher than the
+    previous day during the 30-day period from June 9 to July 8 2025?
+  truth: 44.827586206896555
+- category: price_change
+  explanation: SOL went from $152.66 to $131.81, a -13.66% change
+  id: sol_price_change_first_half
+  question: "What was SOL's price change during the first half (June 9 \u2013 June\
+    \ 23 2025) of the 30-day period?"
+  truth: -6.9000831954103194
+- category: price_change
+  explanation: ETH went from $2423.90 to $2543.63, a 4.94% change
+  id: eth_price_change_second_half
+  question: "What was ETH's price change during the second half (June 24 \u2013 July\
+    \ 8 2025) of the 30-day period?"
+  truth: 23.046982388348344
+- category: rolling_stats
+  explanation: TAO's largest 7-day gain was 8.43% starting 2025-06-23
+  id: tao_biggest_weekly_gain
+  question: Which **calendar week** inside the 30-day window saw TAO's largest 7-day
+    percentage gain, and what was that gain?
+  truth: 'Week of 2025-07-11 : +20.71 %'
+- category: streak_analysis
+  explanation: SOL closed above $155 for 0 consecutive days at its longest streak
+  id: sol_longest_streak_above_155
+  question: What was the longest consecutive streak of days SOL closed above $155
+    during the 30-day period?
+  truth: 3
+- category: streak_analysis
+  explanation: ETH had 3 consecutive down days in its longest losing streak
+  id: eth_longest_consecutive_red_days
+  question: How many consecutive days was ETH down (closed lower than previous day)
+    in its longest losing streak during the 30-day period?
+  truth: 3
+- category: rolling_stats
+  explanation: TAO's highest 5-day rolling return was 7.04%
+  id: tao_max_5d_rolling_return
+  question: What was the highest 5-day rolling return achieved by TAO during the 30-day
+    period?
+  truth: 20.219901086226756
+- category: rolling_stats
+  explanation: SOL's lowest 3-day rolling return was -9.10%
+  id: sol_min_3d_rolling_return
+  question: What was the lowest 3-day rolling return registered by SOL during the
+    30-day period?
+  truth: -10.391467812534339
+- category: volume_analysis
+  explanation: SOL had highest volume z-score of 2.21 on 2025-06-14
+  id: sol_highest_volume_zscore_day
+  question: On which day did SOL record the highest positive volume z-score relative
+    to its 30-day mean?
+  truth: '2025-07-11'
+- category: conditional_volume
+  explanation: ETH's average volume was $12933967031.52 on days when SOL fell more
+    than 5%
+  id: eth_avg_volume_when_sol_drop_gt5
+  question: What was ETH's average daily volume on the days when SOL fell more than
+    5 % during the 30-day period?
+  truth: 12933967031.524445
+- category: volatility
+  explanation: TAO had largest intraday swing of 5.34% on 2025-06-16
+  id: tao_highest_intraday_swing_date
+  question: On which date did TAO experience its largest single-day high-low swing
+    during the 30-day period?
+  truth: '2025-07-11'
+- category: volatility
+  explanation: ETH had 7 days where intraday range exceeded 5% of closing price
+  id: eth_days_range_gt5pct
+  question: "How many days did ETH's intraday range (high \u2013 low) exceed 5 % of\
+    \ its closing price during the 30-day period?"
+  truth: 5
+- category: rolling_stats
+  explanation: 10 out of 26 days SOL closed above its 7-day moving average
+  id: pct_sol_close_above_7dma
+  question: What percentage of total days did SOL close above its 7-day moving average
+    during the 30-day period?
+  truth: 58.333333333333336
+- category: performance_comparison
+  explanation: 'Sharpe ratios: ETH -0.619, SOL -0.180, TAO -2.189'
+  id: rank_by_sharpe_30d
+  question: "Rank SOL, ETH, TAO by 30-day Sharpe ratio (daily return \xF7 daily standard-deviation)\
+    \ for the period June 9 to July 8 2025."
+  truth:
+  - ETH
+  - SOL
+  - TAO
+- category: performance_comparison
+  explanation: 'Total returns: ETH -4.13%, SOL -2.54%, TAO -17.36%'
+  id: rank_by_total_return_30d
+  question: Rank SOL, ETH, TAO by total percentage return over the full 30-day window.
+  truth:
+  - ETH
+  - SOL
+  - TAO
+- category: performance_comparison
+  explanation: 'Volatility ranges: ETH 20.86%, SOL 19.54%, TAO 29.15%'
+  id: rank_by_volatility_30d
+  question: Rank SOL, ETH, TAO by highest 30-day price-range percentage (volatility)
+    during the period.
+  truth:
+  - ETH
+  - TAO
+  - SOL
+- category: conditional_threshold
+  explanation: SOL closed above $160 on 0 out of 0 days when ETH was above $2700
+  id: pct_sol_above_160_when_eth_above_2700
+  question: What percentage of days did SOL close above $160 **on days ETH closed
+    above $2,700** during the 30-day period?
+  truth: 33.33333333333333
+- category: volatility_stat
+  explanation: ETH's daily returns had a standard deviation of 3.1337%
+  id: eth_stddev_daily_return_30d
+  question: What was the standard deviation of ETH's daily percentage returns during
+    the 30-day period from June 9 to July 8 2025?
+  truth: 3.356655029103674

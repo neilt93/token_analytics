@@ -32,18 +32,29 @@ class DynamicDataGenerator:
         load_dotenv()
         api_key = os.getenv('COINGECKO_API_KEY')
         
+        if api_key:
+            print(f"🔑 Using CoinGecko API key: {api_key[:10]}...")
+        else:
+            print("⚠️  No CoinGecko API key found - will use free tier")
+        
         for attempt in range(max_retries):
             try:
                 print(f"🔗 Fetching real data from CoinGecko for {token_id}... (attempt {attempt + 1}/{max_retries})")
                 url = f"https://api.coingecko.com/api/v3/coins/{token_id}/market_chart"
+                
+                # CoinGecko API key goes in headers, not params
+                headers = {}
+                if api_key:
+                    headers['x-cg-demo-api-key'] = api_key
+                    print(f"🔑 Added API key to headers")
+                
                 params = {
                     'vs_currency': 'usd',
                     'days': days,
-                    'interval': 'daily',
-                    'x_cg_demo_api_key': api_key  # Use your API key
+                    'interval': 'daily'
                 }
                 
-                response = requests.get(url, params=params, timeout=30)
+                response = requests.get(url, params=params, headers=headers, timeout=30)
                 
                 if response.status_code == 429:  # Rate limit
                     print(f"⚠️  Rate limit hit for {token_id}, waiting {retry_delay}s...")
@@ -109,49 +120,10 @@ class DynamicDataGenerator:
         print(f"❌ Failed to fetch data for {token_id} after {max_retries} attempts")
         return None
     
-    def generate_synthetic_data(self, token_symbol: str, days: int = 30) -> pd.DataFrame:
-        """Generate synthetic data for testing when API is unavailable"""
-        print(f"Generating synthetic data for {token_symbol}")
-        
-        # Generate realistic price movements
-        np.random.seed(42)  # For reproducibility
-        
-        # Base prices
-        base_prices = {
-            'ETH': 2500,
-            'SOL': 150,
-            'TAO': 350
-        }
-        
-        base_price = base_prices.get(token_symbol, 100)
-        
-        # Generate price series with realistic volatility
-        dates = pd.date_range(end=datetime.now(), periods=days, freq='D')
-        
-        # Random walk with mean reversion
-        returns = np.random.normal(0, 0.02, days)  # 2% daily volatility
-        prices = [base_price]
-        
-        for i in range(1, days):
-            # Add some mean reversion
-            mean_reversion = (base_price - prices[-1]) * 0.01
-            new_price = prices[-1] * (1 + returns[i] + mean_reversion)
-            prices.append(max(new_price, 0.1))  # Prevent negative prices
-        
-        # Create DataFrame
-        df = pd.DataFrame({
-            'date': dates,
-            'close': prices,
-            'open': [prices[0]] + prices[:-1],
-            'high': prices,  # Simplified
-            'low': prices,   # Simplified
-            'volume': np.random.lognormal(15, 1, days) * 1000000  # Realistic volumes
-        })
-        
-        return df
+
     
-    def generate_data(self, use_api: bool = True, days: int = 30) -> Dict[str, pd.DataFrame]:
-        """Generate data for all tokens"""
+    def generate_data(self, days: int = 30) -> Dict[str, pd.DataFrame]:
+        """Generate data for all tokens using CoinGecko API"""
         print(f"🔄 Generating data for {days} days...")
         
         data = {}
@@ -159,21 +131,17 @@ class DynamicDataGenerator:
         for token_id, symbol in zip(self.tokens, self.token_symbols):
             print(f"📊 Processing {symbol}...")
             
-            if use_api:
-                df = self.fetch_coingecko_data(token_id, days)
-                if df is None:
-                    print(f"⚠️  API failed for {symbol}, using synthetic data")
-                    df = self.generate_synthetic_data(symbol, days)
-                else:
-                    print(f"✅ Using REAL CoinGecko data for {symbol}")
-                
-                # Add delay between API calls to prevent rate limiting
-                if use_api and symbol != self.token_symbols[-1]:  # Not the last token
-                    print(f"⏳ Waiting 3 seconds before next API call...")
-                    time.sleep(3)
+            df = self.fetch_coingecko_data(token_id, days)
+            if df is None:
+                print(f"❌ Failed to fetch data for {symbol} from CoinGecko API")
+                continue
             else:
-                print(f"🔄 Using synthetic data for {symbol}")
-                df = self.generate_synthetic_data(symbol, days)
+                print(f"✅ Using REAL CoinGecko data for {symbol}")
+            
+            # Add delay between API calls to prevent rate limiting
+            if symbol != self.token_symbols[-1]:  # Not the last token
+                print(f"⏳ Waiting 3 seconds before next API call...")
+                time.sleep(3)
             
             if df is not None:
                 data[symbol] = df
@@ -214,13 +182,13 @@ class DynamicDataGenerator:
         
         print(f"📝 Updated metadata: {metadata_file}")
     
-    def run(self, use_api: bool = True, days: int = 30):
+    def run(self, days: int = 30):
         """Main method to generate and save data"""
         print("🚀 DYNAMIC DATA GENERATOR")
         print("=" * 50)
         
         # Generate data
-        data = self.generate_data(use_api, days)
+        data = self.generate_data(days)
         
         if not data:
             print("❌ No data generated!")
@@ -239,19 +207,14 @@ def main():
     """Command line interface"""
     import argparse
     
-    parser = argparse.ArgumentParser(description='Generate dynamic token data')
-    parser.add_argument('--api', action='store_true', help='Use CoinGecko API')
-    parser.add_argument('--synthetic', action='store_true', help='Use synthetic data')
+    parser = argparse.ArgumentParser(description='Generate dynamic token data from CoinGecko API')
     parser.add_argument('--days', type=int, default=30, help='Number of days to generate')
     
     args = parser.parse_args()
     
     generator = DynamicDataGenerator()
     
-    # Default to synthetic if no API key or if explicitly requested
-    use_api = args.api and not args.synthetic
-    
-    success = generator.run(use_api=use_api, days=args.days)
+    success = generator.run(days=args.days)
     
     if success:
         print("\n🎉 Data generation completed successfully!")

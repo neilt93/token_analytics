@@ -22,12 +22,12 @@ class DynamicEvaluationOrchestrator:
         self.data_generator = DynamicDataGenerator(data_dir)
         self.truth_calculator = None  # Will be initialized after data generation
     
-    def generate_fresh_data(self, use_api: bool = True, days: int = 30) -> bool:
+    def generate_fresh_data(self, days: int = 30) -> bool:
         """Generate fresh CSV data"""
         print("🚀 STEP 1: GENERATING FRESH DATA")
         print("=" * 50)
         
-        success = self.data_generator.run(use_api=use_api, days=days)
+        success = self.data_generator.run(days=days)
         
         if success:
             print("✅ Data generation completed successfully!")
@@ -102,17 +102,17 @@ class DynamicEvaluationOrchestrator:
             print(f"⚠️  Could not run verification: {e}")
             return True  # Continue anyway
     
-    def run_complete_pipeline(self, use_api: bool = True, days: int = 30) -> bool:
+    def run_complete_pipeline(self, days: int = 30) -> bool:
         """Run the complete dynamic evaluation pipeline"""
         print("🎯 DYNAMIC EVALUATION PIPELINE")
         print("=" * 60)
         print(f"📅 Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print(f"📊 Days: {days}")
-        print(f"🌐 API: {'Yes' if use_api else 'No'}")
+        print(f"🌐 API: {'Yes' if True else 'No'}") # Always using API now
         print("=" * 60)
         
         # Step 1: Generate fresh data
-        if not self.generate_fresh_data(use_api, days):
+        if not self.generate_fresh_data(days):
             return False
         
         # Step 2: Calculate dynamic truth
@@ -179,8 +179,7 @@ class DynamicEvaluationOrchestrator:
 def main():
     """Command line interface"""
     parser = argparse.ArgumentParser(description='Dynamic Evaluation Orchestrator')
-    parser.add_argument('--api', action='store_true', help='Use CoinGecko API')
-    parser.add_argument('--synthetic', action='store_true', help='Use synthetic data')
+    # Data is always pulled from CoinGecko API now – no flags needed
     parser.add_argument('--days', type=int, default=30, help='Number of days to generate')
     parser.add_argument('--status', action='store_true', help='Show system status only')
     
@@ -209,9 +208,7 @@ def main():
         return
     
     # Run complete pipeline
-    use_api = args.api and not args.synthetic
-    
-    success = orchestrator.run_complete_pipeline(use_api=use_api, days=args.days)
+    success = orchestrator.run_complete_pipeline(days=args.days)
     
     if success:
         print("\n🎯 Ready to run evaluations!")

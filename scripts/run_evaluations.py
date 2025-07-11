@@ -12,9 +12,9 @@ import requests
 from dotenv import load_dotenv
 
 # Add parent directory to path for imports
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from scripts.eval import TokenAnalyticsEvaluator
+from eval import TokenAnalyticsEvaluator
 
 # Load environment variables
 load_dotenv()
