@@ -13,8 +13,16 @@ from dotenv import load_dotenv
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from scripts.eval import TokenAnalyticsEvaluator
 
+# Langfuse integration
+from langfuse import Langfuse
+
 # Load environment variables
 load_dotenv()
+langfuse = Langfuse(
+    public_key=os.getenv("LANGFUSE_PUBLIC_KEY"),
+    secret_key=os.getenv("LANGFUSE_SECRET_KEY"),
+    host=os.getenv("LANGFUSE_HOST", "https://us.cloud.langfuse.com")
+)
 
 def get_perplexity_response(question, api_key):
     """
@@ -82,9 +90,21 @@ def run_perplexity_evaluation(api_key):
         
         print(f"[{i:2d}/{len(queries)}] {query_id}: {question[:60]}...")
         
-        # Get response from Perplexity
-        response = get_perplexity_response(question, api_key)
-        responses[query_id] = response
+        # Langfuse tracing for each Perplexity LLM call
+        with langfuse.start_as_current_span(
+            name="PPLX LLM Call",
+            metadata={
+                "query_id": query_id,
+                "question": question,
+                "llm_model": "sonar-pro",
+                "langfuse_name": "PPLX LLM Call"
+            }
+        ):
+            # Get response from Perplexity
+            response = get_perplexity_response(question, api_key)
+            responses[query_id] = response
+            # Log the response as a score (optional)
+            langfuse.score_current_trace(name="llm_response", value=1.0, comment=response)
         
         # Show response preview
         print(f"    Response: {response[:80]}...")

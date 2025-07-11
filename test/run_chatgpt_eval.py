@@ -94,11 +94,12 @@ def run_chatgpt_evaluation(api_key):
         
         # Langfuse tracing for each LLM call
         with langfuse.start_as_current_span(
-            name="LLM Call",
+            name="GPT LLM Call",
             metadata={
                 "query_id": query_id,
                 "question": question,
-                "llm_model": "gpt-4o"
+                "llm_model": "gpt-4o",
+                "langfuse_name": "GPT LLM Call"
             }
         ):
             # Get response from ChatGPT
