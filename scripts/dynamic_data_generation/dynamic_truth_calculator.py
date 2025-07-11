@@ -498,6 +498,11 @@ class DynamicTruthCalculator:
                 old_truth = query['truth']
                 # Convert to native Python types
                 query['truth'] = self.to_native(dynamic_truth)
+                
+                # Remove outdated explanation to avoid confusion
+                if 'explanation' in query:
+                    del query['explanation']
+                
                 updated_count += 1
                 
                 print(f"✅ Updated {query['id']}: {old_truth} → {query['truth']}")

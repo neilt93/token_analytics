@@ -32,6 +32,79 @@ class TokenAnalyticsEvaluator:
         with open(self.queries_file, 'r') as f:
             return yaml.safe_load(f)
     
+    def _evaluate_with_llm_judge(self, agent_response: str, question: str, truth_value: Any, query_id: str) -> Dict:
+        """Use an LLM to evaluate the agent response against the truth value"""
+        
+        # Create evaluation prompt
+        prompt = f"""You are an expert evaluator for AI agents answering cryptocurrency analytics questions.
+
+QUESTION: {question}
+
+TRUTH VALUE: {truth_value}
+
+AGENT RESPONSE: {agent_response}
+
+Please evaluate the agent's response and return a JSON object with these exact fields:
+
+{{
+    "correct": boolean,  // true if the agent's answer matches or is very close to the truth value
+    "extracted_value": // the specific value/answer the agent provided (number, date, list, etc.) or null if unclear
+    "is_hallucination": boolean,  // true only if the agent made up obviously false information
+    "is_refusal": boolean,  // true if the agent refused to answer (e.g., "I don't have access to this data")
+    "error_type": "string",  // one of: "correct", "minor_error", "major_error", "extraction_failed", "refusal", "hallucination"
+    "absolute_error": number or null,  // for numeric answers, the absolute difference from truth
+    "explanation": "string"  // brief explanation of your evaluation
+}}
+
+Guidelines:
+- For percentages, allow ±2% tolerance for "correct"
+- For prices/returns, allow ±5% tolerance for "correct" 
+- For dates, must be exact match
+- For rankings, order must be exactly correct
+- "refusal" is NOT a hallucination - it's honest uncertainty
+- Only mark as "hallucination" if agent provides confident but false information
+- If response is unclear but not obviously false, use "extraction_failed"
+
+Return ONLY the JSON object, no other text."""
+
+        try:
+            response = self.llm_client.chat.completions.create(
+                model="gpt-4o",  # Use full GPT-4o for evaluation
+                messages=[
+                    {"role": "system", "content": "You are a precise evaluator. Return only valid JSON."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.1,
+                max_tokens=300
+            )
+            
+            result_text = response.choices[0].message.content.strip()
+            
+            # Parse JSON response
+            import json
+            evaluation = json.loads(result_text)
+            
+            # Validate required fields
+            required_fields = ["correct", "extracted_value", "is_hallucination", "is_refusal", "error_type", "absolute_error", "explanation"]
+            for field in required_fields:
+                if field not in evaluation:
+                    evaluation[field] = None
+            
+            return evaluation
+            
+        except Exception as e:
+            print(f"⚠️  LLM evaluation failed for {query_id}: {e}")
+            # Fallback to simple evaluation
+            return {
+                "correct": False,
+                "extracted_value": None,
+                "is_hallucination": False,
+                "is_refusal": "don't have access" in agent_response.lower() or "cannot provide" in agent_response.lower(),
+                "error_type": "evaluation_failed",
+                "absolute_error": None,
+                "explanation": f"LLM evaluation failed: {e}"
+            }
+
     def _extract_with_llm(self, agent_response: str, question: str, category: str, expected_type: str) -> Any:
         """
         Use LLM to extract structured data from agent response
@@ -349,91 +422,30 @@ Respond with ONLY the extracted value, no explanation."""
         if not query:
             raise ValueError(f"Query ID {query_id} not found")
         
-        # Extract predicted value based on category and question type
-        predicted = None
+        # Use LLM judge to evaluate the response
         category = query['category']
-        question = query['question'].lower()
-        
-        # Use LLM-based extraction for all categories
-        if category == 'percentage_threshold':
-            predicted = self._extract_with_llm(agent_response, query['question'], category, "percentage")
-        elif category == 'price_change':
-            predicted = self._extract_with_llm(agent_response, query['question'], category, "number")
-        elif category == 'volatility':
-            # For volatility, check if it's asking for a token name or numeric range
-            if 'most volatile' in question or 'which token' in question:
-                predicted = self._extract_with_llm(agent_response, query['question'], category, "token")
-            else:
-                predicted = self._extract_with_llm(agent_response, query['question'], category, "number")
-        elif category == 'volatility_stat':
-            # For volatility statistics, extract numbers
-            predicted = self._extract_with_llm(agent_response, query['question'], category, "number")
-        elif category in ['volume_analysis', 'performance_comparison']:
-            if 'ranking' in question or 'rank' in question:
-                predicted = self._extract_with_llm(agent_response, query['question'], category, "ranking")
-            else:
-                predicted = self._extract_with_llm(agent_response, query['question'], category, "token")
-        elif category == 'price_analysis':
-            if 'date' in question:
-                predicted = self._extract_with_llm(agent_response, query['question'], category, "date")
-            elif 'ranking' in question or 'rank' in question:
-                predicted = self._extract_with_llm(agent_response, query['question'], category, "ranking")
-            else:
-                predicted = self._extract_with_llm(agent_response, query['question'], category, "token")
-        elif category in ['conditional_threshold', 'streak_analysis', 'rolling_stats', 'conditional_volume']:
-            # For these categories, try to extract the most relevant type
-            if 'percentage' in question or '%' in question:
-                predicted = self._extract_with_llm(agent_response, query['question'], category, "percentage")
-            elif 'date' in question:
-                predicted = self._extract_with_llm(agent_response, query['question'], category, "date")
-            elif 'token' in question or any(token in question for token in ['SOL', 'ETH', 'TAO']):
-                predicted = self._extract_with_llm(agent_response, query['question'], category, "token")
-            else:
-                predicted = self._extract_with_llm(agent_response, query['question'], category, "number")
-        else:
-            # Default to number extraction
-            predicted = self._extract_with_llm(agent_response, query['question'], category, "number")
-        
-        # Calculate accuracy
-        accuracy = self._calculate_accuracy(predicted, query['truth'], category)
-        
-        # Determine if response is a hallucination (more nuanced)
-        is_hallucination = False
-        if predicted is None:
-            is_hallucination = True
-        elif isinstance(predicted, (int, float)):
-            # For percentages, flag if > 100 or < -100
-            if category == 'percentage_threshold' and (predicted > 100 or predicted < 0):
-                is_hallucination = True
-            # For price changes, flag if > 1000% or < -1000%
-            elif category == 'price_change' and (predicted > 1000 or predicted < -1000):
-                is_hallucination = True
-            # For volatility ranges, flag if > 1000
-            elif category == 'volatility' and predicted > 1000:
-                is_hallucination = True
-        elif isinstance(predicted, str):
-            # Flag if token name is not valid
-            if predicted not in ['SOL', 'ETH', 'TAO', '2025-06-11', '2025-06-23']:
-                is_hallucination = True
-        elif isinstance(predicted, list):
-            # Flag if ranking contains invalid tokens
-            valid_tokens = ['SOL', 'ETH', 'TAO']
-            if not all(token in valid_tokens for token in predicted):
-                is_hallucination = True
+        evaluation = self._evaluate_with_llm_judge(
+            agent_response, 
+            query['question'], 
+            query['truth'], 
+            query_id
+        )
         
         result = {
             'query_id': query_id,
             'question': query['question'],
             'category': category,
             'truth': query['truth'],
-            'explanation': query['explanation'],
+            'explanation': query.get('explanation', ''),  # May not exist after cleanup
             'agent_name': agent_name,
             'agent_response': agent_response,
-            'predicted': predicted,
-            'correct': accuracy['correct'],
-            'absolute_error': accuracy['absolute_error'],
-            'error_type': accuracy['error_type'],
-            'is_hallucination': is_hallucination,
+            'predicted': evaluation['extracted_value'],
+            'correct': evaluation['correct'],
+            'absolute_error': evaluation['absolute_error'],
+            'error_type': evaluation['error_type'],
+            'is_hallucination': evaluation['is_hallucination'],
+            'is_refusal': evaluation['is_refusal'],
+            'llm_evaluation_explanation': evaluation['explanation'],
             'timestamp': datetime.now().isoformat()
         }
         
