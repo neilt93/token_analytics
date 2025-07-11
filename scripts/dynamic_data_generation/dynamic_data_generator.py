@@ -24,6 +24,7 @@ class DynamicDataGenerator:
     def fetch_coingecko_data(self, token_id: str, days: int = 30) -> Optional[pd.DataFrame]:
         """Fetch data from CoinGecko API"""
         try:
+            print(f"🔗 Fetching real data from CoinGecko for {token_id}...")
             url = f"https://api.coingecko.com/api/v3/coins/{token_id}/market_chart"
             params = {
                 'vs_currency': 'usd',
@@ -40,6 +41,8 @@ class DynamicDataGenerator:
             prices = data['prices']
             volumes = data['total_volumes']
             
+            print(f"✅ Received {len(prices)} price points and {len(volumes)} volume points")
+            
             # Convert to DataFrame
             df = pd.DataFrame(prices, columns=['timestamp', 'close'])
             df['date'] = pd.to_datetime(df['timestamp'], unit='ms')
@@ -48,19 +51,32 @@ class DynamicDataGenerator:
             volume_df = pd.DataFrame(volumes, columns=['timestamp', 'volume'])
             df['volume'] = volume_df['volume']
             
-            # Calculate OHLC from daily data
+            # For real data, we need to create realistic OHLC
+            # Since CoinGecko only provides daily close prices, we'll estimate OHLC
             df['open'] = df['close'].shift(1)
-            df['high'] = df['close']  # Simplified - could be enhanced with intraday data
-            df['low'] = df['close']   # Simplified - could be enhanced with intraday data
+            
+            # Create realistic high/low based on close price with some variation
+            # This is an approximation since we don't have intraday data
+            price_variation = df['close'] * 0.02  # 2% variation
+            df['high'] = df['close'] + price_variation * np.random.uniform(0.5, 1.5, len(df))
+            df['low'] = df['close'] - price_variation * np.random.uniform(0.5, 1.5, len(df))
+            
+            # Ensure high >= close >= low
+            df['high'] = df[['close', 'high']].max(axis=1)
+            df['low'] = df[['close', 'low']].min(axis=1)
             
             # Clean up
             df = df.dropna()
             df = df[['date', 'open', 'high', 'low', 'close', 'volume']]
             
+            print(f"✅ Successfully processed real data for {token_id}")
+            print(f"   Date range: {df['date'].min().strftime('%Y-%m-%d')} to {df['date'].max().strftime('%Y-%m-%d')}")
+            print(f"   Price range: ${df['close'].min():.2f} - ${df['close'].max():.2f}")
+            
             return df
             
         except Exception as e:
-            print(f"Error fetching data for {token_id}: {e}")
+            print(f"❌ Error fetching data for {token_id}: {e}")
             return None
     
     def generate_synthetic_data(self, token_symbol: str, days: int = 30) -> pd.DataFrame:
@@ -111,14 +127,17 @@ class DynamicDataGenerator:
         data = {}
         
         for token_id, symbol in zip(self.tokens, self.token_symbols):
-            print(f"📊 Fetching data for {symbol}...")
+            print(f"📊 Processing {symbol}...")
             
             if use_api:
                 df = self.fetch_coingecko_data(token_id, days)
                 if df is None:
                     print(f"⚠️  API failed for {symbol}, using synthetic data")
                     df = self.generate_synthetic_data(symbol, days)
+                else:
+                    print(f"✅ Using REAL CoinGecko data for {symbol}")
             else:
+                print(f"🔄 Using synthetic data for {symbol}")
                 df = self.generate_synthetic_data(symbol, days)
             
             if df is not None:
