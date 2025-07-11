@@ -27,6 +27,23 @@ class TokenAnalyticsEvaluator:
         self.results = []
         self.llm_api_key = llm_api_key or os.getenv('OPENAI_API_KEY')
         
+        # Initialize OpenAI client for LLM judge - REQUIRED
+        if not self.llm_api_key:
+            # Force load from environment
+            from dotenv import load_dotenv
+            load_dotenv()
+            self.llm_api_key = os.getenv('OPENAI_API_KEY')
+        
+        if not self.llm_api_key:
+            raise ValueError("❌ OPENAI_API_KEY is required! Add it to your .env file")
+        
+        try:
+            from openai import OpenAI
+            self.llm_client = OpenAI(api_key=self.llm_api_key)
+            print(f"✅ Initialized OpenAI client for LLM judge evaluation")
+        except ImportError:
+            raise ImportError("❌ OpenAI package required! Install with: pip install openai")
+        
     def _load_queries(self) -> Dict:
         """Load queries from YAML file"""
         with open(self.queries_file, 'r') as f:
@@ -67,6 +84,8 @@ Guidelines:
 
 Return ONLY the JSON object, no other text."""
 
+
+        
         try:
             response = self.llm_client.chat.completions.create(
                 model="gpt-4o",  # Use full GPT-4o for evaluation
@@ -79,6 +98,13 @@ Return ONLY the JSON object, no other text."""
             )
             
             result_text = response.choices[0].message.content.strip()
+            
+            # Clean up response - remove any markdown formatting
+            if result_text.startswith("```json"):
+                result_text = result_text[7:]
+            if result_text.endswith("```"):
+                result_text = result_text[:-3]
+            result_text = result_text.strip()
             
             # Parse JSON response
             import json
@@ -94,6 +120,8 @@ Return ONLY the JSON object, no other text."""
             
         except Exception as e:
             print(f"⚠️  LLM evaluation failed for {query_id}: {e}")
+            if 'result_text' in locals():
+                print(f"    Raw response: {result_text[:200]}...")
             # Fallback to simple evaluation
             return {
                 "correct": False,
@@ -118,9 +146,7 @@ Return ONLY the JSON object, no other text."""
         Returns:
             Extracted value in appropriate type
         """
-        if not self.llm_api_key:
-            # Fallback to regex if no LLM API key
-            return self._extract_with_regex_fallback(agent_response, expected_type)
+        # OpenAI API key is guaranteed to be available at this point
         
         try:
             # Create parsing prompt
@@ -194,11 +220,11 @@ Respond with ONLY the extracted value, no explanation."""
                     return extracted_text
             else:
                 print(f"LLM API Error: {response.status_code}")
-                return self._extract_with_regex_fallback(agent_response, expected_type)
+                return None
                 
         except Exception as e:
             print(f"LLM extraction error: {e}")
-            return self._extract_with_regex_fallback(agent_response, expected_type)
+            return None
     
     def _extract_with_regex_fallback(self, text: str, expected_type: str) -> Any:
         """

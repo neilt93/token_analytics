@@ -41,12 +41,25 @@ def get_perplexity_response(question, api_key):
             ]
         }
         
-        response = requests.post(
-            "https://api.perplexity.ai/chat/completions",
-            headers=headers,
-            json=data,
-            timeout=30
-        )
+        # Retry logic for timeouts
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                response = requests.post(
+                    "https://api.perplexity.ai/chat/completions",
+                    headers=headers,
+                    json=data,
+                    timeout=60  # Increased timeout
+                )
+                break  # Success, exit retry loop
+            except requests.exceptions.Timeout:
+                if attempt < max_retries - 1:
+                    wait_time = (attempt + 1) * 2  # 2, 4, 6 seconds
+                    print(f"    Timeout on attempt {attempt + 1}, retrying in {wait_time}s...")
+                    time.sleep(wait_time)
+                    continue
+                else:
+                    raise  # Final attempt failed
         
         if response.status_code == 200:
             return response.json()["choices"][0]["message"]["content"]
@@ -81,12 +94,25 @@ def get_chatgpt_response(question, api_key):
             "temperature": 0.1
         }
         
-        response = requests.post(
-            "https://api.openai.com/v1/chat/completions",
-            headers=headers,
-            json=data,
-            timeout=30
-        )
+        # Retry logic for timeouts
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                response = requests.post(
+                    "https://api.openai.com/v1/chat/completions",
+                    headers=headers,
+                    json=data,
+                    timeout=60  # Increased timeout
+                )
+                break  # Success, exit retry loop
+            except requests.exceptions.Timeout:
+                if attempt < max_retries - 1:
+                    wait_time = (attempt + 1) * 2  # 2, 4, 6 seconds
+                    print(f"    Timeout on attempt {attempt + 1}, retrying in {wait_time}s...")
+                    time.sleep(wait_time)
+                    continue
+                else:
+                    raise  # Final attempt failed
         
         if response.status_code == 200:
             return response.json()["choices"][0]["message"]["content"]
@@ -129,8 +155,8 @@ def run_perplexity_evaluation(api_key):
         print(f"    Response: {response[:80]}...")
         print()
         
-        # Rate limiting
-        time.sleep(1)
+        # Rate limiting - be respectful to APIs
+        time.sleep(3)
     
     # Save raw responses
     print("Saving raw responses...")
@@ -184,8 +210,8 @@ def run_chatgpt_evaluation(api_key):
         print(f"    Response: {response[:80]}...")
         print()
         
-        # Rate limiting
-        time.sleep(1)
+        # Rate limiting - be respectful to APIs
+        time.sleep(3)
     
     # Save raw responses
     print("Saving raw responses...")
