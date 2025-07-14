@@ -18,8 +18,21 @@ class DynamicDataGenerator:
     
     def __init__(self, output_dir: str = 'data'):
         self.output_dir = output_dir
-        self.tokens = ['ethereum', 'solana', 'bittensor']  # CoinGecko IDs
-        self.token_symbols = ['ETH', 'SOL', 'TAO']
+        # Updated token list to include all tokens needed for the new queries
+        self.tokens = [
+            'ethereum',      # ETH
+            'solana',        # SOL
+            'bittensor',     # TAO
+            'bitcoin',       # BTC
+            'cardano',       # ADA
+            'avalanche-2',   # AVAX
+            'matic-network', # MATIC
+            'uniswap',       # UNI
+            'dogecoin',      # DOGE
+            'binancecoin',   # BNB
+            'polkadot'       # DOT
+        ]
+        self.token_symbols = ['ETH', 'SOL', 'TAO', 'BTC', 'ADA', 'AVAX', 'MATIC', 'UNI', 'DOGE', 'BNB', 'DOT']
         
     def fetch_coingecko_data(self, token_id: str, days: int = 30) -> Optional[pd.DataFrame]:
         """Fetch data from CoinGecko API with retry logic"""
@@ -35,7 +48,7 @@ class DynamicDataGenerator:
         if api_key:
             print(f"🔑 Using CoinGecko API key: {api_key[:10]}...")
         else:
-            print("⚠️  No CoinGecko API key found - will use free tier")
+            quit("No CoinGecko API key found")
         
         for attempt in range(max_retries):
             try:
@@ -125,11 +138,12 @@ class DynamicDataGenerator:
     def generate_data(self, days: int = 30) -> Dict[str, pd.DataFrame]:
         """Generate data for all tokens using CoinGecko API"""
         print(f"🔄 Generating data for {days} days...")
+        print(f"📊 Fetching data for {len(self.tokens)} tokens: {', '.join(self.token_symbols)}")
         
         data = {}
         
         for token_id, symbol in zip(self.tokens, self.token_symbols):
-            print(f"📊 Processing {symbol}...")
+            print(f"\n📊 Processing {symbol} ({token_id})...")
             
             df = self.fetch_coingecko_data(token_id, days)
             if df is None:
@@ -186,6 +200,9 @@ class DynamicDataGenerator:
         """Main method to generate and save data"""
         print("🚀 DYNAMIC DATA GENERATOR")
         print("=" * 50)
+        print(f"📊 Will fetch data for {len(self.tokens)} tokens")
+        print(f"📅 Days: {days}")
+        print("=" * 50)
         
         # Generate data
         data = self.generate_data(days)
@@ -200,26 +217,31 @@ class DynamicDataGenerator:
         # Update metadata
         self.update_metadata(data)
         
-        print(f"\n✅ Successfully generated data for {len(data)} tokens")
+        print(f"\n🎉 Data generation completed!")
+        print(f"✅ Generated data for {len(data)} tokens")
+        print(f"📁 Files saved to: {self.output_dir}")
+        
         return True
 
 def main():
     """Command line interface"""
     import argparse
     
-    parser = argparse.ArgumentParser(description='Generate dynamic token data from CoinGecko API')
+    parser = argparse.ArgumentParser(description='Dynamic Data Generator')
     parser.add_argument('--days', type=int, default=30, help='Number of days to generate')
     
     args = parser.parse_args()
     
     generator = DynamicDataGenerator()
-    
     success = generator.run(days=args.days)
     
     if success:
-        print("\n🎉 Data generation completed successfully!")
+        print("\n🎉 All done!")
+        return 0
     else:
-        print("\n❌ Data generation failed!")
+        print("\n❌ Failed!")
+        return 1
 
 if __name__ == "__main__":
-    main() 
+    import sys
+    sys.exit(main()) 

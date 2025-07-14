@@ -1,0 +1,253 @@
+metadata:
+  categories:
+  - single_token_easy
+  - single_token_medium
+  - single_token_hard
+  - multi_token_easy
+  - multi_token_medium
+  - multi_token_hard
+  - token_research
+  - trick_question
+  data_source: Various cryptocurrency APIs
+  data_type: Real-time and historical market data
+  date_range: Current and historical periods
+  time_horizons:
+  - Current prices
+  - 24-hour changes
+  - Historical periods
+  - Technical indicators
+  tokens:
+  - ETH
+  - SOL
+  - BTC
+  - TAO
+  - ADA
+  - AVAX
+  - MATIC
+  - UNI
+  - DOGE
+  - BNB
+  - Cardano
+  - PEPE
+  - DOT
+  - Sentient
+  - Various other tokens
+queries:
+- category: single_token_easy
+  difficulty: Easy
+  id: eth_price_current
+  question: what's the price of ETH
+  truth: 3013.98899091091
+  user_persona: Average
+- category: single_token_medium
+  difficulty: Medium
+  id: sol_buy_timing
+  question: when is a good time to buy SOL
+  truth: up
+  user_persona: Average
+- category: single_token_medium
+  difficulty: Medium
+  id: btc_avg_price_month
+  question: what has been average price of bitcoin over the past month
+  truth: 108529.15047390858
+  user_persona: Average
+- category: single_token_easy
+  difficulty: Easy
+  id: tao_24h_change
+  question: what's the 24h price change for TAO
+  truth: 4.202960254174558
+  user_persona: Average
+- category: single_token_easy
+  difficulty: Easy
+  id: ada_ath
+  question: what's the all time high for ADA
+  truth: 0.7378983923650405
+  user_persona: Average
+- category: single_token_easy
+  difficulty: Easy
+  id: avalanche_basic_stats
+  question: show me basic stats for avalanche
+  truth: 18.521699395942246
+  user_persona: Average
+- category: single_token_medium
+  difficulty: Medium
+  id: matic_trending
+  question: is MATIC trending up or down
+  truth: up
+  user_persona: Average
+- category: single_token_medium
+  difficulty: Medium
+  id: uniswap_liquidity
+  question: how liquid is Uni swap token
+  truth: 1097781329.6736202
+  user_persona: Average
+- category: single_token_easy
+  difficulty: Easy
+  id: doge_market_cap
+  question: what's the current market cap of DOGE
+  truth: 343.634911576686
+  user_persona: Average
+- category: single_token_easy
+  difficulty: Easy
+  id: bnb_trading_volume
+  question: what's the trading volume of BNB today
+  truth: 1779407548.1692588
+  user_persona: Average
+- category: single_token_medium
+  difficulty: Medium
+  id: cardano_eur_price
+  question: what's the price of Cardano in EUR
+  truth: null
+  user_persona: Average
+- category: single_token_easy
+  difficulty: Easy
+  id: btc_price
+  question: what's the price of BTC
+  truth: 119864.33347684667
+  user_persona: Average
+- category: single_token_easy
+  difficulty: Easy
+  id: tao_up_down_today
+  question: is tao up or down today
+  truth: up
+  user_persona: Average
+- category: trick_question
+  difficulty: N/A
+  id: sentient_past_30_days
+  question: what happened with Sentient over the past 30 days
+  truth: null
+  user_persona: Trick Question
+- category: trick_question
+  difficulty: N/A
+  id: yourmomma42069_yesterday
+  question: what happened with $YOURMOMMA42069 yesterday
+  truth: null
+  user_persona: Trick Question
+- category: trick_question
+  difficulty: N/A
+  id: eth_april_31st_last_year
+  question: what's the price of ETH on April 31st last year
+  truth: null
+  user_persona: Trick Question
+- category: trick_question
+  difficulty: Medium
+  id: doge_2020_halloween
+  question: what's the price of DOGE in 2020 on Halloween
+  truth: null
+  user_persona: Trick Question
+- category: trick_question
+  difficulty: Medium
+  id: pepe_price
+  question: what's the price of PEPE
+  truth: null
+  user_persona: Trick Question
+- category: single_token_hard
+  difficulty: Hard
+  id: eth_higher_than_opened_june
+  question: How many days did ETH close higher than it opened in June?
+  truth: 9
+  user_persona: Pro
+- category: single_token_medium
+  difficulty: Medium
+  id: tao_avg_price_month
+  question: What has been the average price of TAO over the past month?
+  truth: 344.9591045547581
+  user_persona: Pro
+- category: single_token_medium
+  difficulty: Medium
+  id: fartcoin_rotation
+  question: Should I rotate $FARTCOIN
+  truth: null
+  user_persona: Pro
+- category: single_token_hard
+  difficulty: Hard
+  id: matic_rsi_now
+  question: what's the RSI for MATIC right now
+  truth: 73.66281062536478
+  user_persona: Pro
+- category: single_token_hard
+  difficulty: Hard
+  id: dot_macd_crossover
+  question: show me the MACD crossover for DOT
+  truth: 0.11059072131759118
+  user_persona: Pro
+- category: multi_token_medium
+  difficulty: Medium
+  id: eth_vs_sol_investment
+  question: is ETH or SOL better investment rn
+  truth: ETH
+  user_persona: Average
+- category: multi_token_easy
+  difficulty: Easy
+  id: btc_eth_prices_today
+  question: compare BTC and ETH prices today
+  truth: null
+  user_persona: Average
+- category: trick_question
+  difficulty: N/A
+  id: bittensor_vs_sentient
+  question: Bittensor or Sentient
+  truth: null
+  user_persona: Trick Question
+- category: trick_question
+  difficulty: N/A
+  id: elon_vs_dogelon
+  question: ELON or DOGELON which Elon prefers
+  truth: null
+  user_persona: Trick Question
+- category: trick_question
+  difficulty: N/A
+  id: safe_vs_tarp
+  question: SAFE or TARP which is safer
+  truth: null
+  user_persona: Trick Question
+- category: multi_token_hard
+  difficulty: Hard
+  id: eth_vs_sol_avg_daily_change_year
+  question: based on average daily price percentage change over the past year, is
+    ETH or SOL a better investment
+  truth: ETH
+  user_persona: Pro
+- category: multi_token_hard
+  difficulty: Hard
+  id: tao_eth_30d_volatility
+  question: compare 30-day volatility between TAO and ETH
+  truth: TAO
+  user_persona: Pro
+- category: token_research
+  difficulty: Medium
+  id: best_tokens_medium_term
+  question: what are the best tokens to invest in medium-term right now
+  truth: null
+  user_persona: Average
+- category: token_research
+  difficulty: Medium
+  id: solana_trending_100k_dtv
+  question: what's trending today on Solana above $100K DTV
+  truth: null
+  user_persona: Average
+- category: token_research
+  difficulty: Medium
+  id: biggest_token_talks_x
+  question: biggest token talks on X community?
+  truth: null
+  user_persona: Average
+- category: token_research
+  difficulty: Medium
+  id: ai_tokens_real_utility
+  question: which AI tokens have real utility
+  truth: null
+  user_persona: Average
+- category: token_research
+  difficulty: Medium
+  id: low_cap_tokens_potential
+  question: best low-cap tokens with potential
+  truth: null
+  user_persona: Average
+- category: trick_question
+  difficulty: N/A
+  id: better_tokens_than_sentient
+  question: any better tokens to invest in than Sentient that are similar what's the
+    trading volume of BNB today
+  truth: null
+  user_persona: Trick Question
