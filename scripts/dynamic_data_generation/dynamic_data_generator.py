@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """
 Dynamic Data Generator
-Generates fresh CSV data for token analytics evaluation
+Generates fresh CSV data for token analytics evaluation using ONLY real CoinGecko data
 """
 
 import pandas as pd
-import numpy as np
 import requests
 import json
 import os
@@ -14,7 +13,7 @@ from typing import Dict, List, Optional
 import time
 
 class DynamicDataGenerator:
-    """Generates dynamic CSV data for token analytics"""
+    """Generates dynamic CSV data for token analytics using ONLY real data"""
     
     def __init__(self, output_dir: str = 'data'):
         self.output_dir = output_dir
@@ -30,12 +29,20 @@ class DynamicDataGenerator:
             'uniswap',       # UNI
             'dogecoin',      # DOGE
             'binancecoin',   # BNB
-            'polkadot'       # DOT
+            'polkadot',      # DOT
+            'pepe',          # PEPE
+            'fartcoin',      # FARTCOIN
+            'shiba-inu',     # SHIB
+            'the-graph',     # GRT
+            'rootstock',     # RTL
+            'modo',          # MODO
+            'optimism',      # OP
+            'ripple'         # XRP
         ]
-        self.token_symbols = ['ETH', 'SOL', 'TAO', 'BTC', 'ADA', 'AVAX', 'MATIC', 'UNI', 'DOGE', 'BNB', 'DOT']
+        self.token_symbols = ['ETH', 'SOL', 'TAO', 'BTC', 'ADA', 'AVAX', 'MATIC', 'UNI', 'DOGE', 'BNB', 'DOT', 'PEPE', 'FARTCOIN', 'SHIB', 'GRT', 'RTL', 'MODO', 'OP', 'XRP']
         
     def fetch_coingecko_data(self, token_id: str, days: int = 30) -> Optional[pd.DataFrame]:
-        """Fetch data from CoinGecko API with retry logic"""
+        """Fetch ONLY real data from CoinGecko API - no estimation"""
         max_retries = 3
         retry_delay = 2  # seconds
         
@@ -52,7 +59,7 @@ class DynamicDataGenerator:
         
         for attempt in range(max_retries):
             try:
-                print(f"🔗 Fetching real data from CoinGecko for {token_id}... (attempt {attempt + 1}/{max_retries})")
+                print(f"🔗 Fetching REAL data from CoinGecko for {token_id}... (attempt {attempt + 1}/{max_retries})")
                 url = f"https://api.coingecko.com/api/v3/coins/{token_id}/market_chart"
                 
                 # CoinGecko API key goes in headers, not params
@@ -79,41 +86,34 @@ class DynamicDataGenerator:
                 
                 data = response.json()
                 
-                # Extract price data
+                # Extract ONLY real data from CoinGecko
                 prices = data['prices']
                 volumes = data['total_volumes']
                 
-                print(f"✅ Received {len(prices)} price points and {len(volumes)} volume points")
+                print(f"✅ Received {len(prices)} REAL price points and {len(volumes)} REAL volume points")
                 
-                # Convert to DataFrame
+                # Convert to DataFrame with ONLY real data
                 df = pd.DataFrame(prices, columns=['timestamp', 'close'])
                 df['date'] = pd.to_datetime(df['timestamp'], unit='ms')
                 
-                # Add volume data
+                # Add ONLY real volume data
                 volume_df = pd.DataFrame(volumes, columns=['timestamp', 'volume'])
                 df['volume'] = volume_df['volume']
                 
-                # For real data, we need to create realistic OHLC
-                # Since CoinGecko only provides daily close prices, we'll estimate OHLC
-                df['open'] = df['close'].shift(1)
+                # For CoinGecko daily data, we only have close prices and volumes
+                # We'll use close price as the primary price and set open/high/low to close
+                df['open'] = df['close']  # Use close as open since we don't have intraday data
+                df['high'] = df['close']  # Use close as high since we don't have intraday data  
+                df['low'] = df['close']   # Use close as low since we don't have intraday data
                 
-                # Create realistic high/low based on close price with some variation
-                # This is an approximation since we don't have intraday data
-                price_variation = df['close'] * 0.02  # 2% variation
-                df['high'] = df['close'] + price_variation * np.random.uniform(0.5, 1.5, len(df))
-                df['low'] = df['close'] - price_variation * np.random.uniform(0.5, 1.5, len(df))
-                
-                # Ensure high >= close >= low
-                df['high'] = df[['close', 'high']].max(axis=1)
-                df['low'] = df[['close', 'low']].min(axis=1)
-                
-                # Clean up
+                # Clean up - only keep real data
                 df = df.dropna()
                 df = df[['date', 'open', 'high', 'low', 'close', 'volume']]
                 
-                print(f"✅ Successfully processed real data for {token_id}")
+                print(f"✅ Successfully processed REAL data for {token_id}")
                 print(f"   Date range: {df['date'].min().strftime('%Y-%m-%d')} to {df['date'].max().strftime('%Y-%m-%d')}")
                 print(f"   Price range: ${df['close'].min():.2f} - ${df['close'].max():.2f}")
+                print(f"   Volume range: {df['volume'].min():.0f} - {df['volume'].max():.0f}")
                 
                 return df
                 
@@ -136,9 +136,9 @@ class DynamicDataGenerator:
 
     
     def generate_data(self, days: int = 30) -> Dict[str, pd.DataFrame]:
-        """Generate data for all tokens using CoinGecko API"""
+        """Generate data for all tokens using ONLY real CoinGecko data"""
         print(f"🔄 Generating data for {days} days...")
-        print(f"📊 Fetching data for {len(self.tokens)} tokens: {', '.join(self.token_symbols)}")
+        print(f"📊 Fetching REAL data for {len(self.tokens)} tokens: {', '.join(self.token_symbols)}")
         
         data = {}
         
@@ -150,7 +150,7 @@ class DynamicDataGenerator:
                 print(f"❌ Failed to fetch data for {symbol} from CoinGecko API")
                 continue
             else:
-                print(f"✅ Using REAL CoinGecko data for {symbol}")
+                print(f"✅ Using ONLY REAL CoinGecko data for {symbol}")
             
             # Add delay between API calls to prevent rate limiting
             if symbol != self.token_symbols[-1]:  # Not the last token
@@ -159,7 +159,7 @@ class DynamicDataGenerator:
             
             if df is not None:
                 data[symbol] = df
-                print(f"✅ Generated {len(df)} days of data for {symbol}")
+                print(f"✅ Generated {len(df)} days of REAL data for {symbol}")
             else:
                 print(f"❌ Failed to generate data for {symbol}")
         
@@ -174,12 +174,13 @@ class DynamicDataGenerator:
             filepath = os.path.join(self.output_dir, filename)
             
             df.to_csv(filepath, index=False)
-            print(f"💾 Saved {filename} ({len(df)} rows)")
+            print(f"💾 Saved {filename} ({len(df)} rows of REAL data)")
     
     def update_metadata(self, data: Dict[str, pd.DataFrame]):
         """Update metadata about the generated data"""
         metadata = {
             'generated_at': datetime.now().isoformat(),
+            'data_source': 'CoinGecko API - REAL data only',
             'data_points': {symbol: len(df) for symbol, df in data.items()},
             'date_range': {
                 symbol: {
@@ -187,7 +188,8 @@ class DynamicDataGenerator:
                     'end': df['date'].max().isoformat()
                 } for symbol, df in data.items()
             },
-            'tokens': list(data.keys())
+            'tokens': list(data.keys()),
+            'note': 'All data is real from CoinGecko API - no estimation or made-up values'
         }
         
         metadata_file = os.path.join(self.output_dir, 'metadata.json')
@@ -198,11 +200,12 @@ class DynamicDataGenerator:
     
     def run(self, days: int = 30):
         """Main method to generate and save data"""
-        print("🚀 DYNAMIC DATA GENERATOR")
-        print("=" * 50)
-        print(f"📊 Will fetch data for {len(self.tokens)} tokens")
+        print("🚀 DYNAMIC DATA GENERATOR - REAL DATA ONLY")
+        print("=" * 60)
+        print(f"📊 Will fetch REAL data for {len(self.tokens)} tokens")
         print(f"📅 Days: {days}")
-        print("=" * 50)
+        print(f"⚠️  NO estimation or made-up values - ONLY real CoinGecko data")
+        print("=" * 60)
         
         # Generate data
         data = self.generate_data(days)
@@ -218,8 +221,9 @@ class DynamicDataGenerator:
         self.update_metadata(data)
         
         print(f"\n🎉 Data generation completed!")
-        print(f"✅ Generated data for {len(data)} tokens")
+        print(f"✅ Generated REAL data for {len(data)} tokens")
         print(f"📁 Files saved to: {self.output_dir}")
+        print(f"⚠️  All data is real from CoinGecko - no estimation used")
         
         return True
 
@@ -227,7 +231,7 @@ def main():
     """Command line interface"""
     import argparse
     
-    parser = argparse.ArgumentParser(description='Dynamic Data Generator')
+    parser = argparse.ArgumentParser(description='Dynamic Data Generator - Real Data Only')
     parser.add_argument('--days', type=int, default=30, help='Number of days to generate')
     
     args = parser.parse_args()

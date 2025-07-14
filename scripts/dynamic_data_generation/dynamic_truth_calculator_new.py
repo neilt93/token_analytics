@@ -1,342 +1,287 @@
 #!/usr/bin/env python3
 """
-Dynamic Truth Calculator for New Queries
-Calculates truth values dynamically from CSV data for new query types
+Dynamic Truth Calculator (NEW)
+Wraps the original DynamicTruthCalculator but labels subjective / trick / research queries as "human".
 """
 
-import pandas as pd
-import numpy as np
+from dynamic_truth_calculator import DynamicTruthCalculator
 import yaml
-import os
-from datetime import datetime
-from typing import Dict, List, Any, Union
-import json
+import numpy as np
+from typing import Any, Dict
+import re
 
-class DynamicTruthCalculatorNew:
-    """Calculates truth values dynamically from CSV data for new query types"""
-    
-    def __init__(self, data_dir: str = 'data'):
-        self.data_dir = data_dir
-        self.data = {}
-        self.load_data()
-    
-    def load_data(self):
-        """Load all CSV data files"""
-        print("📊 Loading CSV data...")
-        
-        # Expected tokens based on the updated data generator
-        expected_tokens = ['eth', 'sol', 'tao', 'btc', 'ada', 'avax', 'matic', 'uni', 'doge', 'bnb', 'dot']
-        
-        for token in expected_tokens:
-            filename = f"{token}_daily.csv"
-            filepath = os.path.join(self.data_dir, filename)
-            
-            if os.path.exists(filepath):
-                try:
-                    df = pd.read_csv(filepath)
-                    df['date'] = pd.to_datetime(df['date'])
-                    df.set_index('date', inplace=True)
-                    
-                    # Calculate daily returns
-                    df['daily_return'] = df['close'].pct_change() * 100
-                    
-                    symbol = token.upper()
-                    self.data[symbol] = df
-                    print(f"✅ Loaded {symbol}: {len(df)} days")
-                    
-                except Exception as e:
-                    print(f"❌ Error loading {filename}: {e}")
-            else:
-                print(f"⚠️  {filename} not found")
-    
-    def calculate_current_price(self, token: str) -> Union[float, None]:
-        """Calculate current price for a token"""
-        if token not in self.data:
-            return None
-        return float(self.data[token]['close'].iloc[-1])
-    
-    def calculate_24h_change(self, token: str) -> Union[float, None]:
-        """Calculate 24-hour price change"""
-        if token not in self.data or len(self.data[token]) < 2:
-            return None
-        
-        df = self.data[token]
-        current = df['close'].iloc[-1]
-        previous = df['close'].iloc[-2]
-        return float(((current - previous) / previous) * 100)
-    
-    def calculate_30d_change(self, token: str) -> Union[float, None]:
-        """Calculate 30-day price change"""
-        if token not in self.data or len(self.data[token]) < 30:
-            return None
-        
-        df = self.data[token]
-        current = df['close'].iloc[-1]
-        thirty_days_ago = df['close'].iloc[-30]
-        return float(((current - thirty_days_ago) / thirty_days_ago) * 100)
-    
-    def calculate_average_price(self, token: str) -> Union[float, None]:
-        """Calculate average price over the dataset period"""
-        if token not in self.data:
-            return None
-        return float(self.data[token]['close'].mean())
-    
-    def calculate_trend(self, token: str) -> Union[str, None]:
-        """Calculate if token is trending up or down"""
-        if token not in self.data or len(self.data[token]) < 7:
-            return None
-        
-        df = self.data[token]
-        week_avg = df['close'].tail(7).mean()
-        current = df['close'].iloc[-1]
-        return "up" if current > week_avg else "down"
-    
-    def calculate_green_days_in_month(self, token: str, month: int) -> Union[int, None]:
-        """Calculate number of days in a month where close > open"""
-        if token not in self.data:
-            return None
-        
-        df = self.data[token]
-        # Filter for specific month
-        month_data = df[df.index.month == month]
-        
-        if len(month_data) == 0:
-            return None
-        
-        green_days = (month_data['close'] > month_data['open']).sum()
-        return int(green_days)
-    
-    def calculate_volatility_comparison(self, token1: str, token2: str) -> Union[str, None]:
-        """Compare volatility between two tokens"""
-        if token1 not in self.data or token2 not in self.data:
-            return None
-        
-        df1 = self.data[token1]
-        df2 = self.data[token2]
-        
-        # Calculate standard deviation of daily returns
-        vol1 = df1['daily_return'].std()
-        vol2 = df2['daily_return'].std()
-        
-        if vol1 > vol2:
-            return token1
-        elif vol2 > vol1:
-            return token2
-        else:
-            return "Equal"
-    
-    def calculate_performance_comparison(self, token1: str, token2: str) -> Union[str, None]:
-        """Compare performance between two tokens"""
-        if token1 not in self.data or token2 not in self.data:
-            return None
-        
-        df1 = self.data[token1]
-        df2 = self.data[token2]
-        
-        # Calculate average daily returns
-        avg_return1 = df1['daily_return'].mean()
-        avg_return2 = df2['daily_return'].mean()
-        
-        if avg_return1 > avg_return2:
-            return token1
-        elif avg_return2 > avg_return1:
-            return token2
-        else:
-            return "Equal"
-    
-    def calculate_30d_performance_comparison(self, token1: str, token2: str) -> Union[str, None]:
-        """Compare 30-day performance between two tokens"""
-        change1 = self.calculate_30d_change(token1)
-        change2 = self.calculate_30d_change(token2)
-        
-        if change1 is None or change2 is None:
-            return None
-        
-        if change1 > change2:
-            return token1
-        elif change2 > change1:
-            return token2
-        else:
-            return "Equal"
-    
-    def calculate_market_cap_estimate(self, token: str) -> Union[float, None]:
-        """Estimate market cap using price and volume"""
-        if token not in self.data:
-            return None
-        
-        df = self.data[token]
-        avg_price = df['close'].mean()
-        avg_volume = df['volume'].mean()
-        
-        # Rough estimate: price * volume / 1e6 for millions
-        return float(avg_price * avg_volume / 1e6)
-    
-    def calculate_volume(self, token: str) -> Union[float, None]:
-        """Calculate current volume for a token"""
-        if token not in self.data:
-            return None
-        return float(self.data[token]['volume'].iloc[-1])
-    
+
+class DynamicTruthCalculatorNew(DynamicTruthCalculator):
+    """Extends DynamicTruthCalculator with human-label logic"""
+
+    def to_native(self, val):
+        """Convert numpy and pandas types to native Python types"""
+        import pandas as pd
+        if isinstance(val, (np.generic,)):
+            return val.item()
+        if isinstance(val, np.ndarray):
+            return val.tolist()
+        if 'pandas' in str(type(val)):
+            # For pandas Series or DataFrame, convert to dict or list
+            if hasattr(val, 'to_dict'):
+                return val.to_dict()
+            if hasattr(val, 'tolist'):
+                return val.tolist()
+        if isinstance(val, dict):
+            return {k: self.to_native(v) for k, v in val.items()}
+        if isinstance(val, list):
+            return [self.to_native(x) for x in val]
+        return val
+
     def calculate_truth_for_query(self, query: Dict) -> Any:
-        """Calculate truth value for a specific query"""
+        """Calculate truth value for a specific query with improved ID matching"""
         query_id = query['id']
         category = query['category']
         
-        # Single token easy queries
-        if category == 'single_token_easy':
-            if 'eth_price_current' in query_id:
-                return self.calculate_current_price('ETH')
-            elif 'btc_price' in query_id:
-                return self.calculate_current_price('BTC')
-            elif 'tao_24h_change' in query_id:
-                return self.calculate_24h_change('TAO')
-            elif 'tao_up_down_today' in query_id:
-                change = self.calculate_24h_change('TAO')
-                if change is not None:
-                    return "up" if change > 0 else "down"
-                return None
-            elif 'ada_ath' in query_id:
-                # For ATH, we'll use the highest price in our dataset
-                if 'ADA' in self.data:
-                    return float(self.data['ADA']['close'].max())
-                return None
-            elif 'avalanche_basic_stats' in query_id:
-                # Return average price for basic stats
-                return self.calculate_average_price('AVAX')
-            elif 'doge_market_cap' in query_id:
-                return self.calculate_market_cap_estimate('DOGE')
-            elif 'bnb_trading_volume' in query_id:
-                return self.calculate_volume('BNB')
-            elif 'cardano_eur_price' in query_id:
-                # We have USD prices, but for EUR we'd need conversion
-                # For now, return USD price as approximation
-                return self.calculate_current_price('ADA')
+        # Handle basic price queries
+        if query_id in ['eth_price_current', 'btc_price', 'pepe_price']:
+            token = query_id.split('_')[0].upper()
+            return self.calculate_basic_price(token, 'current_price')
         
-        # Single token medium queries
-        elif category == 'single_token_medium':
-            if 'sol_buy_timing' in query_id:
-                return self.calculate_trend('SOL')
-            elif 'btc_avg_price_month' in query_id:
-                return self.calculate_average_price('BTC')
-            elif 'matic_trending' in query_id:
-                return self.calculate_trend('MATIC')
-            elif 'uniswap_liquidity' in query_id:
-                # Use volume as proxy for liquidity
-                return self.calculate_volume('UNI')
-            elif 'tao_avg_price_month' in query_id:
-                return self.calculate_average_price('TAO')
+        # Handle 24h change queries
+        elif query_id == 'tao_24h_change':
+            if 'TAO' in self.data:
+                df = self.data['TAO']
+                if len(df) >= 2:
+                    yesterday_close = df['close'].iloc[-2]
+                    today_close = df['close'].iloc[-1]
+                    change = ((today_close - yesterday_close) / yesterday_close) * 100
+                    return round(change, 2)
         
-        # Single token hard queries
-        elif category == 'single_token_hard':
-            if 'eth_higher_than_opened_june' in query_id:
-                return self.calculate_green_days_in_month('ETH', 6)  # June = 6
-            elif 'matic_rsi_now' in query_id:
-                # Calculate RSI for MATIC
-                if 'MATIC' in self.data:
-                    df = self.data['MATIC']
-                    if len(df) >= 14:
-                        delta = df['close'].diff()
-                        gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
-                        loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
-                        rs = gain / loss
-                        rsi = 100 - (100 / (1 + rs))
-                        return float(rsi.iloc[-1])
-                return None
-            elif 'dot_macd_crossover' in query_id:
-                # Calculate MACD for DOT
-                if 'DOT' in self.data:
-                    df = self.data['DOT']
-                    if len(df) >= 26:
-                        ema12 = df['close'].ewm(span=12).mean()
-                        ema26 = df['close'].ewm(span=26).mean()
-                        macd = ema12 - ema26
-                        signal = macd.ewm(span=9).mean()
-                        # Return current MACD value
-                        return float(macd.iloc[-1])
-                return None
+        # Handle average price queries
+        elif query_id in ['btc_avg_price_month', 'tao_avg_price_month']:
+            token = query_id.split('_')[0].upper()
+            if token in self.data:
+                df = self.data[token]
+                avg_price = df['close'].mean()
+                return round(avg_price, 2)
         
-        # Multi-token queries
-        elif category == 'multi_token_medium':
-            if 'eth_vs_sol_investment' in query_id:
-                return self.calculate_30d_performance_comparison('ETH', 'SOL')
-            elif 'btc_eth_prices_today' in query_id:
-                # Return a comparison string
-                btc_price = self.calculate_current_price('BTC')
-                eth_price = self.calculate_current_price('ETH')
-                if btc_price and eth_price:
-                    return f"BTC: ${btc_price:.2f}, ETH: ${eth_price:.2f}"
-                return None
+        # Handle ATH queries
+        elif query_id == 'ada_ath':
+            if 'ADA' in self.data:
+                ath = self.data['ADA']['high'].max()
+                return round(ath, 2)
         
-        # Multi-token hard queries
-        elif category == 'multi_token_hard':
-            if 'eth_vs_sol_avg_daily_change_year' in query_id:
-                return self.calculate_performance_comparison('ETH', 'SOL')
-            elif 'tao_eth_30d_volatility' in query_id:
-                return self.calculate_volatility_comparison('TAO', 'ETH')
+        # Handle green days queries
+        elif query_id == 'eth_higher_than_opened_june':
+            if 'ETH' in self.data:
+                df = self.data['ETH']
+                # Filter for June (assuming data includes June)
+                june_data = df[df.index.month == 6]
+                if len(june_data) > 0:
+                    green_days = (june_data['close'] > june_data['open']).sum()
+                    return int(green_days)
         
-        # Trick questions - these should remain null
-        elif category == 'trick_question':
-            return None
+        elif query_id == 'xrp_green_days_may_2024':
+            if 'XRP' in self.data:
+                df = self.data['XRP']
+                # Filter for May 2024
+                may_2024_data = df[(df.index.month == 5) & (df.index.year == 2024)]
+                if len(may_2024_data) > 0:
+                    green_days = (may_2024_data['close'] > may_2024_data['open']).sum()
+                    return int(green_days)
         
-        # Token research queries - these are subjective
-        elif category == 'token_research':
-            return None
-        
-        # Default: return None if we can't calculate
-        return None
-    
-    def to_native(self, val):
-        """Convert numpy types to native Python types"""
-        if isinstance(val, (np.generic,)):
-            return val.item()
-        if isinstance(val, list):
-            return [self.to_native(x) for x in val]
-        if isinstance(val, dict):
-            return {k: self.to_native(v) for k, v in val.items()}
-        return val
-
-    def update_queries_with_dynamic_truth(self, queries_file: str = 'data/queries_new.yaml'):
-        """Update queries with dynamically calculated truth values"""
-        print("🔄 Updating new queries with dynamic truth values...")
-        
-        # Load queries
-        with open(queries_file, 'r') as f:
-            queries_data = yaml.safe_load(f)
-        
-        updated_count = 0
-        
-        for query in queries_data['queries']:
-            dynamic_truth = self.calculate_truth_for_query(query)
+        # Handle specific date queries
+        elif query_id in ['eth_close_14_06_2025', 'eth_open_15_06_2025', 'sol_close_16_06_2025', 
+                         'sol_open_17_06_2025', 'tao_close_18_06_2025']:
+            parts = query_id.split('_')
+            token = parts[0].upper()
+            price_type = parts[1]  # 'close' or 'open'
+            day = int(parts[2])
+            month = int(parts[3])
+            year = int(parts[4])
             
-            if dynamic_truth is not None:
-                old_truth = query['truth']
-                # Convert to native Python types
-                query['truth'] = self.to_native(dynamic_truth)
+            if token in self.data:
+                df = self.data[token]
+                target_date = f"{year}-{month:02d}-{day:02d}"
+                try:
+                    if price_type == 'close':
+                        price = df.loc[target_date, 'close']
+                    else:
+                        price = df.loc[target_date, 'open']
+                    return round(price, 2)
+                except KeyError:
+                    return None
+        
+        # Handle volume queries
+        elif query_id in ['eth_volume_17_06_2025', 'sol_volume_18_06_2025', 'tao_volume_20_06_2025']:
+            parts = query_id.split('_')
+            token = parts[0].upper()
+            day = int(parts[2])
+            month = int(parts[3])
+            year = int(parts[4])
+            
+            if token in self.data:
+                df = self.data[token]
+                target_date = f"{year}-{month:02d}-{day:02d}"
+                try:
+                    volume = df.loc[target_date, 'volume']
+                    return round(volume, 2)
+                except KeyError:
+                    return None
+        
+        # Handle extreme value queries
+        elif query_id in ['eth_highest_10_14_06_2025', 'sol_lowest_15_19_06_2025', 'tao_peak_19_06_2025']:
+            # Use regex to extract token, value_type, start_day, end_day, month, year
+            m = re.match(r"(\w+)_(highest|lowest|peak)_(\d+)(?:_(\d+))?_(\d+)_?(\d+)?", query_id)
+            if not m:
+                return None
+            token = m.group(1).upper()
+            value_type = m.group(2)
+            start_day = int(m.group(3))
+            end_day = int(m.group(4)) if m.group(4) else start_day
+            month = int(m.group(5))
+            year = int(m.group(6)) if m.group(6) else 2025  # fallback year
+            if token in self.data:
+                df = self.data[token]
+                try:
+                    start_date = f"{year}-{month:02d}-{start_day:02d}"
+                    end_date = f"{year}-{month:02d}-{end_day:02d}"
+                    period_data = df.loc[start_date:end_date]
+                    if value_type == 'highest' or value_type == 'peak':
+                        value = period_data['high'].max()
+                    elif value_type == 'lowest':
+                        value = period_data['low'].min()
+                    else:
+                        return None
+                    return round(value, 2)
+                except Exception:
+                    return None
+        
+        # Handle ranking queries
+        elif query_id == 'rank_tokens_30d_return':
+            returns = {}
+            for token in self.data:
+                df = self.data[token]
+                if len(df) >= 30:
+                    start_price = df['close'].iloc[-30]
+                    end_price = df['close'].iloc[-1]
+                    returns[token] = ((end_price - start_price) / start_price) * 100
+            
+            sorted_tokens = sorted(returns.items(), key=lambda x: x[1], reverse=True)
+            return [token for token, _ in sorted_tokens]
+        
+        # Handle correlation queries
+        elif query_id == 'grt_rtl_correlation':
+            if 'GRT' in self.data and 'RTL' in self.data:
+                grt_df = self.data['GRT']
+                rtl_df = self.data['RTL']
                 
-                updated_count += 1
-                
-                print(f"✅ Updated {query['id']}: {old_truth} → {query['truth']}")
+                # Align the data by date
+                common_dates = grt_df.index.intersection(rtl_df.index)
+                if len(common_dates) > 0:
+                    grt_returns = grt_df.loc[common_dates, 'close'].pct_change()
+                    rtl_returns = rtl_df.loc[common_dates, 'close'].pct_change()
+                    
+                    # Calculate correlation
+                    correlation = grt_returns.corr(rtl_returns)
+                    return round(correlation, 4)
+        
+        # Handle total return queries
+        elif query_id == 'op_total_return_june_2025':
+            if 'OP' in self.data:
+                df = self.data['OP']
+                june_2025_data = df[(df.index.month == 6) & (df.index.year == 2025)]
+                if len(june_2025_data) > 0:
+                    start_price = june_2025_data['close'].iloc[0]
+                    end_price = june_2025_data['close'].iloc[-1]
+                    total_return = ((end_price - start_price) / start_price) * 100
+                    return round(total_return, 2)
+        
+        # Handle up/down today queries
+        elif query_id == 'tao_up_down_today':
+            if 'TAO' in self.data:
+                df = self.data['TAO']
+                if len(df) >= 2:
+                    yesterday_close = df['close'].iloc[-2]
+                    today_close = df['close'].iloc[-1]
+                    if today_close > yesterday_close:
+                        return "up"
+                    elif today_close < yesterday_close:
+                        return "down"
+                    else:
+                        return "unchanged"
+        
+        # Handle multi-token comparison queries
+        elif query_id in ['btc_eth_prices_today', 'doge_vs_shib', 'tao_vs_sol_volume_today']:
+            if query_id == 'btc_eth_prices_today':
+                tokens = ['BTC', 'ETH']
+            elif query_id == 'doge_vs_shib':
+                tokens = ['DOGE', 'SHIB']
+            elif query_id == 'tao_vs_sol_volume_today':
+                tokens = ['TAO', 'SOL']
+            
+            prices = {}
+            for token in tokens:
+                if token in self.data:
+                    prices[token] = self.data[token]['close'].iloc[-1]
+            
+            if len(prices) == len(tokens):
+                return prices
+        
+        # Handle biggest gains queries
+        elif query_id == 'biggest_gains_today_btc_eth_sol':
+            tokens = ['BTC', 'ETH', 'SOL']
+            gains = {}
+            
+            for token in tokens:
+                if token in self.data:
+                    df = self.data[token]
+                    if len(df) >= 2:
+                        yesterday_close = df['close'].iloc[-2]
+                        today_close = df['close'].iloc[-1]
+                        gain = ((today_close - yesterday_close) / yesterday_close) * 100
+                        gains[token] = round(gain, 2)
+            
+            if gains:
+                # Return the token with biggest gain
+                best_token = max(gains.items(), key=lambda x: x[1])
+                return f"{best_token[0]}: {best_token[1]}%"
+        
+        # For queries we can't calculate, return None
+        return None
+
+    def update_queries_with_dynamic_truth(self, queries_file: str = 'data/queries.yaml') -> int:
+        """Calculate / label truths and write output in place to queries.yaml"""
+        with open(queries_file, 'r', encoding='utf-8') as f:
+            queries_data = yaml.safe_load(f)
+
+        updated = 0
+        for q in queries_data['queries']:
+            category = q.get('category')
+            truth_val: Any = None
+
+            if category in ('token_research', 'trick_question'):
+                # subjective / trick → human
+                truth_val = 'human'
             else:
-                print(f"⚠️  Could not calculate truth for {query['id']}")
-        
-        # Save updated queries
-        output_file = queries_file.replace('.yaml', '_dynamic.yaml')
-        with open(output_file, 'w') as f:
-            yaml.dump(queries_data, f, default_flow_style=False, indent=2)
-        
-        print(f"\n✅ Updated {updated_count} queries with dynamic truth values")
-        print(f"💾 Saved to: {output_file}")
-        return updated_count
+                truth_val = self.calculate_truth_for_query(q)
+                # if still None after calc for data-driven types, leave as null
+                if truth_val is None and category.startswith('multi_token'):
+                    # some multi-token comparisons we cannot resolve → human
+                    truth_val = 'human'
+
+            if truth_val is not None:
+                q['truth'] = self.to_native(truth_val)
+                updated += 1
+
+        # Always write in place to queries.yaml
+        with open(queries_file, 'w', encoding='utf-8') as f:
+            yaml.dump(queries_data, f, default_flow_style=False, indent=2, sort_keys=False)
+
+        print(f"💾 Saved updated queries to {queries_file} ({updated} updated)")
+        return updated
+
 
 def main():
-    """Main function"""
-    calculator = DynamicTruthCalculatorNew()
-    
-    # Update queries with dynamic truth
-    updated_count = calculator.update_queries_with_dynamic_truth('data/queries_new.yaml')
-    
-    print(f"\n🎉 Dynamic truth calculation completed!")
-    print(f"Updated {updated_count} queries")
+    calc = DynamicTruthCalculatorNew(data_dir='../../data')
+    calc.update_queries_with_dynamic_truth('../../data/queries.yaml')
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     main() 
